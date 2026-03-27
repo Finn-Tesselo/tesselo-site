@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesselo — AI-Assisted Development Studio</title>
+    <meta name="description" content="Tesselo builds MVPs, apps, and digital products at speed using AI-assisted development. From idea to launch, fast.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f2ee;
+            --grey: #8a8680;
+            --grey-light: #d4d0cb;
+            --accent: #c4431a;
+            --font-serif: 'Instrument Serif', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background: var(--white);
+            color: var(--black);
+            font-family: var(--font-sans);
+            font-weight: 300;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            mix-blend-mode: difference;
+        }
+
+        nav .logo {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        nav .nav-links a {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--white);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            transition: opacity 0.3s;
+        }
+
+        nav .nav-links a:hover {
+            opacity: 0.5;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 3rem;
+            padding-bottom: 6rem;
+            position: relative;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-size: clamp(3.5rem, 9vw, 8rem);
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 .line-2 {
+            display: inline-block;
+            margin-left: 15%;
+            color: var(--accent);
+        }
+
+        .hero-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 2rem;
+        }
+
+        .hero-sub {
+            max-width: 420px;
+            color: var(--grey);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .hero-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #444;
+            white-space: nowrap;
+        }
+
+        /* ─── SECTION COMMON ─── */
+        section {
+            padding: 8rem 3rem;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--grey);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--grey-light);
+        }
+
+        /* ─── SERVICES ─── */
+        .services {
+            background: var(--white);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--grey-light);
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            padding: 3rem 2.5rem;
+            transition: background 0.4s, color 0.4s;
+            cursor: default;
+        }
+
+        .service-card:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .service-card:hover .service-num {
+            color: var(--accent);
+        }
+
+        .service-num {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            color: var(--grey-light);
+            transition: color 0.4s;
+            margin-bottom: 2rem;
+        }
+
+        .service-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.75rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        .service-card p {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--grey);
+            transition: color 0.4s;
+        }
+
+        .service-card:hover p {
+            color: var(--grey-light);
+        }
+
+        /* ─── WORK / PORTFOLIO ─── */
+        .work {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .work .section-label {
+            color: var(--grey);
+        }
+
+        .work .section-label::after {
+            background: #333;
+        }
+
+        .work-intro {
+            max-width: 600px;
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            font-weight: 400;
+            line-height: 1.4;
+            margin-bottom: 5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .work-intro em {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            border: 1px solid #222;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.4s;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent);
+        }
+
+        .project-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--grey);
+            margin-bottom: 1rem;
+        }
+
+        .project-card h4 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-card p {
+            font-size: 0.85rem;
+            color: var(--grey);
+            line-height: 1.6;
+        }
+
+        .project-placeholder {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #333;
+            border: 1px solid #333;
+            padding: 0.3rem 0.7rem;
+        }
+
+        /* ─── PROCESS ─── */
+        .process {
+            background: var(--white);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            margin-top: 2rem;
+        }
+
+        .process-step {
+            padding: 2.5rem 2rem;
+            border-left: 1px solid var(--grey-light);
+        }
+
+        .process-step:first-child {
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .step-num {
+            font-family: var(--font-serif);
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .process-step h4 {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .process-step p {
+            font-size: 0.85rem;
+            color: var(--grey);
+            line-height: 1.6;
+        }
+
+        /* ─── CONTACT ─── */
+        .contact {
+            background: var(--black);
+            color: var(--white);
+            text-align: center;
+            padding: 10rem 3rem;
+        }
+
+        .contact h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 400;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact h2 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .contact p {
+            color: var(--grey);
+            max-width: 400px;
+            margin: 0 auto 3rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .contact-email {
+            display: inline-block;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--white);
+            text-decoration: none;
+            padding: 1rem 2.5rem;
+            border: 1px solid #444;
+            transition: all 0.4s;
+        }
+
+        .contact-email:hover {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--black);
+            color: var(--grey);
+            padding: 2rem 3rem;
+            border-top: 1px solid #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        footer a {
+            color: var(--grey);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--white);
+        }
+
+        /* ─── ANIMATIONS ─── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            nav { padding: 1.25rem 1.5rem; }
+            nav .nav-links { gap: 1.5rem; }
+            nav .nav-links a { font-size: 0.7rem; }
+            section { padding: 5rem 1.5rem; }
+            .hero { padding: 1.5rem; padding-bottom: 4rem; }
+            .hero h1 { font-size: clamp(2.8rem, 12vw, 5rem); }
+            .hero h1 .line-2 { margin-left: 5%; }
+            .hero-bottom { flex-direction: column; align-items: flex-start; }
+            .hero-tag { display: none; }
+            .services-grid { grid-template-columns: 1fr; }
+            .project-grid { grid-template-columns: 1fr; }
+            .process-steps { grid-template-columns: 1fr; }
+            .process-step { border-left: none; border-top: 1px solid var(--grey-light); padding-left: 0; padding: 2rem 0; }
+            .process-step:first-child { border-top: none; }
+            .contact { padding: 6rem 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            nav .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="#" class="logo">Tesselo</a>
+        <ul class="nav-links">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <span class="line-1">Build it.</span><br>
+                <span class="line-2">Ship it.</span>
+            </h1>
+            <div class="hero-bottom">
+                <p class="hero-sub">
+                    Tesselo is a development studio that builds MVPs, apps, and digital products at speed — using AI-assisted development to go from idea to launch, fast.
+                </p>
+                <span class="hero-tag">AI-Assisted Development Studio</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+        <div class="section-label">What I do</div>
+        <div class="services-grid">
+            <div class="service-card fade-in stagger-1">
+                <div class="service-num">01</div>
+                <h3>MVP Development</h3>
+                <p>Got an idea? I'll turn it into a working product. Full MVPs built and shipped in weeks, not months. React apps, dashboards, SaaS tools, mobile-first platforms — designed, built, and ready to test with real users.</p>
+            </div>
+            <div class="service-card fade-in stagger-2">
+                <div class="service-num">02</div>
+                <h3>Ongoing Development</h3>
+                <p>Retainer-based support for products that need continuous improvement. New features, bug fixes, iteration cycles. I work as an embedded part of your team without the overhead of a full hire.</p>
+            </div>
+            <div class="service-card fade-in stagger-3">
+                <div class="service-num">03</div>
+                <h3>AI Dev Consulting</h3>
+                <p>Want to understand how AI-assisted development could accelerate your team or product? I'll show you what's possible, help you set up workflows, and advise on where AI fits into your build process.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="work" id="work">
+        <div class="section-label">Selected Work</div>
+        <p class="work-intro fade-in">
+            Every piece ships. No concepts, no wireframes left in drawers. These are <em>real products</em> built with AI-assisted development.
+        </p>
+        <div class="project-grid">
+            <div class="project-card fade-in stagger-1">
+                <span class="project-placeholder">Coming Soon</span>
+                <div class="project-tag">Web Application</div>
+                <h4>Project One</h4>
+                <p>Full-stack SaaS tool built from concept to deployment. Details arriving shortly.</p>
+            </div>
+            <div class="project-card fade-in stagger-2">
+                <span class="project-placeholder">Coming Soon</span>
+                <div class="project-tag">Dashboard</div>
+                <h4>Project Two</h4>
+                <p>Data-driven dashboard with real-time visualisation and filtering. Details arriving shortly.</p>
+            </div>
+            <div class="project-card fade-in stagger-3">
+                <span class="project-placeholder">Coming Soon</span>
+                <div class="project-tag">Mobile-First App</div>
+                <h4>Project Three</h4>
+                <p>React-based mobile application with AI-powered features. Details arriving shortly.</p>
+            </div>
+            <div class="project-card fade-in stagger-4">
+                <span class="project-placeholder">Coming Soon</span>
+                <div class="project-tag">Internal Tool</div>
+                <h4>Project Four</h4>
+                <p>Business automation tool replacing manual workflows. Details arriving shortly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="process" id="process">
+        <div class="section-label">How it works</div>
+        <div class="process-steps">
+            <div class="process-step fade-in stagger-1">
+                <div class="step-num">i</div>
+                <h4>Discovery</h4>
+                <p>We talk through what you need, who it's for, and what success looks like. No jargon, no fluff.</p>
+            </div>
+            <div class="process-step fade-in stagger-2">
+                <div class="step-num">ii</div>
+                <h4>Build</h4>
+                <p>I build fast using AI-assisted development. You see working progress within days, not weeks. Real code, real product.</p>
+            </div>
+            <div class="process-step fade-in stagger-3">
+                <div class="step-num">iii</div>
+                <h4>Iterate</h4>
+                <p>You test, you feedback, I refine. Tight loops until it's right. No long disappearances — you're involved throughout.</p>
+            </div>
+            <div class="process-step fade-in stagger-4">
+                <div class="step-num">iv</div>
+                <h4>Ship</h4>
+                <p>Deployed, documented, and handed over. You own everything. I stick around if you need ongoing support.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+        <h2>Let's <em>build</em><br>something.</h2>
+        <p>Have an idea that needs building? A product that needs improving? Get in touch and let's talk about what's possible.</p>
+        <a href="mailto:hello@tesselo.dev" class="contact-email">hello@tesselo.dev</a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <span>&copy; 2026 Tesselo</span>
+        <span>Built with AI-assisted development</span>
+    </footer>
+
+    <!-- SCROLL ANIMATIONS -->
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
