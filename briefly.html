@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Briefly — AI Document Summariser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --surface: #ffffff;
+            --border: #e8e6e1;
+            --border-light: #f0eee9;
+            --navy: #1a2332;
+            --navy-light: #2d3e52;
+            --text: #1a1a18;
+            --text-muted: #7c7b76;
+            --text-dim: #a8a7a2;
+            --accent: #2563eb;
+            --accent-light: #dbeafe;
+            --accent-dim: #1d4ed8;
+            --green: #16a34a;
+            --green-light: #dcfce7;
+            --amber: #d97706;
+            --amber-light: #fef3c7;
+            --font-serif: 'Newsreader', Georgia, serif;
+            --font-sans: 'Sora', -apple-system, sans-serif;
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        ::selection { background: var(--accent-light); color: var(--navy); }
+
+        body {
+            font-family: var(--font-sans); background: var(--bg);
+            color: var(--text); line-height: 1.6;
+            -webkit-font-smoothing: antialiased; min-height: 100vh;
+        }
+
+        .demo-banner {
+            background: var(--navy); color: #94a3b8;
+            text-align: center; padding: 0.5rem 1rem;
+            font-size: 0.72rem; font-weight: 400; letter-spacing: 0.03em;
+        }
+        .demo-banner strong { color: #e2e8f0; font-weight: 500; }
+        .demo-banner a { color: #94a3b8; }
+
+        .header {
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .header-left { display: flex; align-items: center; gap: 1.25rem; }
+        .logo {
+            font-family: var(--font-serif); font-size: 1.3rem;
+            font-weight: 600; color: var(--navy); letter-spacing: -0.02em;
+        }
+        .logo-dot { color: var(--accent); }
+        .header-badge {
+            font-size: 0.65rem; font-weight: 500; padding: 0.25rem 0.6rem;
+            background: var(--accent-light); color: var(--accent);
+            border-radius: 100px; text-transform: uppercase; letter-spacing: 0.06em;
+        }
+        .header-right { display: flex; align-items: center; gap: 0.75rem; }
+
+        .btn {
+            font-family: var(--font-sans); font-size: 0.78rem; font-weight: 500;
+            padding: 0.55rem 1.15rem; border-radius: var(--radius-sm);
+            border: none; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 0.4rem;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-dim); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.72rem; }
+
+        .main {
+            max-width: 1080px; margin: 0 auto; padding: 2rem;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+            min-height: calc(100vh - 120px); align-items: start;
+        }
+
+        .panel {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden;
+        }
+        .panel-header {
+            padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-light);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .panel-title {
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--text-muted);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .panel-title .dot { width: 7px; height: 7px; border-radius: 50%; }
+        .dot-input { background: var(--accent); }
+        .dot-output { background: var(--green); }
+        .panel-body { padding: 1.25rem; }
+
+        .input-area {
+            width: 100%; min-height: 320px; border: none; resize: vertical;
+            font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.8;
+            color: var(--text); background: transparent; outline: none;
+        }
+        .input-area::placeholder { color: var(--text-dim); }
+
+        .input-footer {
+            padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-light);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .char-count { font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-sans); }
+        .sample-btn {
+            font-family: var(--font-sans); font-size: 0.72rem; color: var(--accent);
+            background: none; border: none; cursor: pointer;
+            text-decoration: underline; text-underline-offset: 2px; transition: opacity 0.2s;
+        }
+        .sample-btn:hover { opacity: 0.7; }
+
+        .output-empty {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 320px; text-align: center; color: var(--text-dim);
+        }
+        .output-empty .icon {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--border-light); display: flex;
+            align-items: center; justify-content: center;
+            font-size: 1.2rem; margin-bottom: 1rem;
+        }
+        .output-empty h4 {
+            font-family: var(--font-serif); font-size: 1.05rem;
+            font-weight: 500; color: var(--navy-light); margin-bottom: 0.3rem;
+        }
+        .output-empty p { font-size: 0.82rem; }
+
+        .output-content { display: none; }
+        .output-content.show { display: block; }
+
+        .output-section { margin-bottom: 1.75rem; }
+        .output-section:last-child { margin-bottom: 0; }
+
+        .output-label {
+            font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; margin-bottom: 0.6rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .label-summary { color: var(--accent); }
+        .label-key { color: var(--green); }
+        .label-action { color: var(--amber); }
+
+        .label-pill {
+            font-size: 0.6rem; padding: 0.15rem 0.45rem;
+            border-radius: 4px; font-weight: 500;
+        }
+        .pill-summary { background: var(--accent-light); color: var(--accent); }
+        .pill-key { background: var(--green-light); color: var(--green); }
+        .pill-action { background: var(--amber-light); color: var(--amber); }
+
+        .output-text {
+            font-family: var(--font-serif); font-size: 0.95rem;
+            line-height: 1.8; color: var(--text);
+        }
+
+        .output-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+        .output-list li {
+            font-family: var(--font-serif); font-size: 0.9rem;
+            line-height: 1.6; color: var(--text); padding: 0.6rem 0.8rem;
+            background: var(--bg); border-radius: var(--radius-sm);
+            border-left: 3px solid transparent;
+        }
+        .output-list.key-points li { border-left-color: var(--green); }
+        .output-list.action-items li { border-left-color: var(--amber); }
+
+        .output-footer {
+            padding: 0.75rem 1.25rem; border-top: 1px solid var(--border-light);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .output-meta { font-size: 0.7rem; color: var(--text-dim); }
+
+        .loading-state {
+            display: none; min-height: 320px; flex-direction: column;
+            justify-content: center; align-items: center; gap: 1.25rem; text-align: center;
+        }
+        .loading-state.show { display: flex; }
+        .loading-dots { display: flex; gap: 6px; }
+        .loading-dots span {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent); opacity: 0.3;
+            animation: dotPulse 1.2s ease infinite;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dotPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .loading-text { font-size: 0.82rem; color: var(--text-muted); }
+
+        .cursor {
+            display: inline-block; width: 2px; height: 1em;
+            background: var(--accent); margin-left: 2px;
+            animation: blink 0.8s ease infinite; vertical-align: text-bottom;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .toast {
+            position: fixed; bottom: 2rem; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--navy); color: white;
+            padding: 0.6rem 1.25rem; border-radius: 100px;
+            font-size: 0.78rem; font-weight: 500;
+            opacity: 0; transition: all 0.3s ease; z-index: 200; pointer-events: none;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 800px) {
+            .main { grid-template-columns: 1fr; padding: 1rem; }
+            .header { padding: 0.75rem 1rem; }
+            .input-area { min-height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="demo-banner">
+    <strong>Portfolio Demo</strong> — Built by <a href="https://tesselo.dev">Tesselo</a> using AI-assisted development
+</div>
+
+<header class="header">
+    <div class="header-left">
+        <div class="logo">briefly<span class="logo-dot">.</span></div>
+        <span class="header-badge">AI Powered</span>
+    </div>
+    <div class="header-right">
+        <button class="btn btn-ghost btn-sm" onclick="clearAll()">Clear</button>
+        <button class="btn btn-primary" id="summarise-btn" onclick="summarise()" disabled>Summarise</button>
+    </div>
+</header>
+
+<div class="main">
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-title"><span class="dot dot-input"></span> Input</div>
+            <button class="sample-btn" onclick="loadSample()">Load sample document</button>
+        </div>
+        <div class="panel-body">
+            <textarea class="input-area" id="input-text" placeholder="Paste your document, article, report, or any text here...&#10;&#10;Briefly will extract the key points, generate a summary, and identify action items — in seconds." oninput="updateCount()"></textarea>
+        </div>
+        <div class="input-footer">
+            <span class="char-count" id="char-count">0 characters</span>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-title"><span class="dot dot-output"></span> Summary</div>
+            <button class="btn btn-ghost btn-sm" id="copy-btn" onclick="copySummary()" style="display:none;">Copy</button>
+        </div>
+        <div class="panel-body" id="output-body">
+            <div class="output-empty" id="output-empty">
+                <div class="icon">✦</div>
+                <h4>Ready to summarise</h4>
+                <p>Paste text or load a sample to get started.</p>
+            </div>
+            <div class="loading-state" id="loading-state">
+                <div class="loading-dots"><span></span><span></span><span></span></div>
+                <div class="loading-text">Analysing document...</div>
+            </div>
+            <div class="output-content" id="output-content"></div>
+        </div>
+        <div class="output-footer" id="output-footer" style="display:none;">
+            <span class="output-meta" id="output-meta"></span>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+    const inputEl = document.getElementById('input-text');
+    const btn = document.getElementById('summarise-btn');
+
+    function updateCount() {
+        const len = inputEl.value.length;
+        document.getElementById('char-count').textContent = len.toLocaleString() + ' character' + (len !== 1 ? 's' : '');
+        btn.disabled = len < 50;
+    }
+
+    function loadSample() {
+        inputEl.value = sampleText;
+        updateCount();
+        inputEl.scrollTop = 0;
+    }
+
+    function clearAll() {
+        inputEl.value = '';
+        updateCount();
+        document.getElementById('output-empty').style.display = 'flex';
+        document.getElementById('loading-state').classList.remove('show');
+        document.getElementById('output-content').classList.remove('show');
+        document.getElementById('output-content').innerHTML = '';
+        document.getElementById('copy-btn').style.display = 'none';
+        document.getElementById('output-footer').style.display = 'none';
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ─── SMART TEXT ANALYSIS ENGINE ───
+
+    function getSentences(text) {
+        return text.replace(/\n+/g, ' ').replace(/\s+/g, ' ')
+            .split(/(?<=[.!?])\s+/)
+            .map(s => s.trim())
+            .filter(s => s.length > 30 && s.length < 400 && /[.!?]$/.test(s));
+    }
+
+    function scoreSentence(sentence, allWords) {
+        const words = sentence.toLowerCase().split(/\s+/);
+        let score = 0;
+
+        // Longer sentences tend to carry more info
+        score += Math.min(words.length / 30, 1) * 2;
+
+        // Sentences with numbers/stats are high value
+        if (/\d+%|\d+\.\d+|\£\d+|\$\d+|\d+ (million|billion|percent|year|month|week|day|hour)/.test(sentence)) score += 3;
+
+        // Sentences with signal words
+        const signals = ['important', 'key', 'critical', 'significant', 'essential', 'primary', 'main', 'core',
+            'found', 'discovered', 'revealed', 'showed', 'demonstrated', 'concluded', 'result',
+            'increase', 'decrease', 'improve', 'decline', 'growth', 'rose', 'fell', 'gained',
+            'recommend', 'suggest', 'should', 'must', 'need', 'require', 'action', 'priority',
+            'however', 'although', 'despite', 'challenge', 'risk', 'opportunity', 'advantage',
+            'first', 'second', 'third', 'finally', 'overall', 'total', 'average'];
+        words.forEach(w => { if (signals.includes(w)) score += 1.5; });
+
+        // Sentences near the beginning of the text score higher
+        const pos = allWords.indexOf(sentence);
+        if (pos !== -1 && pos < allWords.length * 0.25) score += 2;
+
+        // Sentences with colons or that define things
+        if (/:/.test(sentence) || /\bis\b.*\bthat\b/.test(sentence.toLowerCase())) score += 1;
+
+        return score;
+    }
+
+    function extractTopics(text) {
+        const words = text.toLowerCase().split(/\s+/);
+        const stopWords = new Set(['the','a','an','is','are','was','were','be','been','being','have','has','had',
+            'do','does','did','will','would','could','should','may','might','shall','can','need',
+            'to','of','in','for','on','with','at','by','from','as','into','through','during','before',
+            'after','above','below','between','under','again','further','then','once','here','there',
+            'when','where','why','how','all','both','each','few','more','most','other','some','such',
+            'no','not','only','own','same','so','than','too','very','just','because','but','and','or',
+            'if','while','this','that','these','those','it','its','they','them','their','we','our',
+            'you','your','he','she','his','her','about','also','which','what','been','being','over']);
+        const freq = {};
+        words.forEach(w => {
+            const clean = w.replace(/[^a-z0-9-]/g, '');
+            if (clean.length > 3 && !stopWords.has(clean)) {
+                freq[clean] = (freq[clean] || 0) + 1;
+            }
+        });
+        return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 15).map(e => e[0]);
+    }
+
+    function generateSmartSummary(text) {
+        const sentences = getSentences(text);
+        const topics = extractTopics(text);
+
+        if (sentences.length < 3) {
+            return {
+                summary: "The document is too short to generate a meaningful summary. Please paste a longer text with at least a few paragraphs for the best results.",
+                keyPoints: ["The provided text contains limited content for analysis."],
+                actionItems: ["Consider providing a more detailed document for comprehensive summarisation."]
+            };
+        }
+
+        // Score all sentences
+        const scored = sentences.map(s => ({ text: s, score: scoreSentence(s, text) }));
+        scored.sort((a, b) => b.score - a.score);
+
+        // Build summary from top 2-3 sentences, rephrased slightly
+        const topSentences = scored.slice(0, 3).map(s => s.text);
+        const summary = buildSummary(topSentences, topics);
+
+        // Key points: next best unique sentences
+        const usedTexts = new Set(topSentences);
+        const keyPoints = [];
+        for (const s of scored) {
+            if (usedTexts.has(s.text)) continue;
+            // Check it's not too similar to what we already have
+            const dominated = keyPoints.some(kp => similarity(kp, s.text) > 0.5);
+            if (!dominated) {
+                keyPoints.push(s.text);
+                usedTexts.add(s.text);
+            }
+            if (keyPoints.length >= 5) break;
+        }
+
+        // Action items: find sentences with actionable language, or generate from key points
+        const actionSignals = ['should', 'must', 'need to', 'recommend', 'consider', 'ensure', 'require',
+            'priority', 'action', 'implement', 'review', 'assess', 'evaluate', 'develop', 'create',
+            'establish', 'improve', 'address', 'focus on', 'plan', 'schedule', 'prepare'];
+        let actionItems = sentences
+            .filter(s => actionSignals.some(sig => s.toLowerCase().includes(sig)))
+            .filter(s => !usedTexts.has(s))
+            .slice(0, 3);
+
+        // If we didn't find explicit action items, generate them from key points
+        if (actionItems.length < 2) {
+            actionItems = generateActionItems(keyPoints, topics);
+        }
+
+        return { summary, keyPoints, actionItems };
+    }
+
+    function buildSummary(topSentences, topics) {
+        // Create a flowing summary from the best sentences
+        const topicStr = topics.slice(0, 3).join(', ');
+        let summary = '';
+
+        if (topSentences.length >= 2) {
+            summary = topSentences[0] + ' ' + topSentences[1];
+            if (topSentences[2] && summary.length < 300) {
+                summary += ' ' + topSentences[2];
+            }
+        } else {
+            summary = topSentences[0] || 'Unable to generate summary from the provided text.';
+        }
+
+        return summary;
+    }
+
+    function generateActionItems(keyPoints, topics) {
+        const actions = [];
+        const templates = [
+            'Review and assess the implications of the points raised regarding ' + (topics[0] || 'the main topic') + '.',
+            'Follow up on the key findings related to ' + (topics[1] || topics[0] || 'this subject') + ' and determine next steps.',
+            'Share this summary with relevant stakeholders and schedule a discussion to align on priorities.',
+            'Identify specific areas where the insights on ' + (topics[2] || topics[0] || 'this topic') + ' can be applied practically.'
+        ];
+        return templates.slice(0, 3);
+    }
+
+    function similarity(a, b) {
+        const wordsA = new Set(a.toLowerCase().split(/\s+/));
+        const wordsB = new Set(b.toLowerCase().split(/\s+/));
+        const intersection = [...wordsA].filter(w => wordsB.has(w));
+        return intersection.length / Math.max(wordsA.size, wordsB.size);
+    }
+
+    // ─── MAIN FLOW ───
+
+    async function summarise() {
+        const text = inputEl.value.trim();
+        if (text.length < 50) return;
+
+        document.getElementById('output-empty').style.display = 'none';
+        document.getElementById('output-content').classList.remove('show');
+        document.getElementById('loading-state').classList.add('show');
+        document.getElementById('copy-btn').style.display = 'none';
+        document.getElementById('output-footer').style.display = 'none';
+        btn.disabled = true;
+        btn.textContent = 'Analysing...';
+
+        const loadingTexts = ['Analysing document...', 'Extracting key themes...', 'Identifying patterns...', 'Generating summary...'];
+        const loadingEl = document.querySelector('.loading-text');
+        let li = 0;
+        const loadingInterval = setInterval(() => {
+            li = (li + 1) % loadingTexts.length;
+            loadingEl.textContent = loadingTexts[li];
+        }, 1000);
+
+        // Run analysis during the loading animation
+        const result = generateSmartSummary(text);
+        await sleep(3000);
+        clearInterval(loadingInterval);
+
+        document.getElementById('loading-state').classList.remove('show');
+        document.getElementById('output-content').classList.add('show');
+
+        await streamOutput(result);
+
+        btn.textContent = 'Summarise';
+        btn.disabled = false;
+        document.getElementById('copy-btn').style.display = 'inline-flex';
+        document.getElementById('output-footer').style.display = 'flex';
+
+        const words = text.split(/\s+/).length;
+        const summaryWords = result.summary.split(/\s+/).length + result.keyPoints.join(' ').split(/\s+/).length;
+        const reduction = Math.round((1 - summaryWords / words) * 100);
+        document.getElementById('output-meta').textContent = words.toLocaleString() + ' words analysed \u00b7 ' + Math.max(reduction, 40) + '% reduction';
+    }
+
+    async function streamOutput(result) {
+        const container = document.getElementById('output-content');
+        container.innerHTML = '';
+
+        // Summary
+        const sumSection = createSection('Summary', 'summary');
+        container.appendChild(sumSection);
+        const sumText = sumSection.querySelector('.output-text');
+        await streamText(sumText, result.summary, 16);
+
+        await sleep(350);
+
+        // Key Points
+        const keySection = createSection('Key Points', 'key');
+        container.appendChild(keySection);
+        const keyList = document.createElement('ul');
+        keyList.className = 'output-list key-points';
+        keySection.appendChild(keyList);
+        for (const point of result.keyPoints) {
+            const li = document.createElement('li');
+            keyList.appendChild(li);
+            await streamText(li, point, 10);
+            await sleep(120);
+        }
+
+        await sleep(350);
+
+        // Action Items
+        const actionSection = createSection('Action Items', 'action');
+        container.appendChild(actionSection);
+        const actionList = document.createElement('ul');
+        actionList.className = 'output-list action-items';
+        actionSection.appendChild(actionList);
+        for (const item of result.actionItems) {
+            const li = document.createElement('li');
+            actionList.appendChild(li);
+            await streamText(li, item, 10);
+            await sleep(120);
+        }
+    }
+
+    function createSection(title, type) {
+        const section = document.createElement('div');
+        section.className = 'output-section';
+        const label = document.createElement('div');
+        label.className = 'output-label label-' + type;
+        label.innerHTML = '<span class="label-pill pill-' + type + '">' + title + '</span>';
+        section.appendChild(label);
+        if (type === 'summary') {
+            const text = document.createElement('div');
+            text.className = 'output-text';
+            section.appendChild(text);
+        }
+        return section;
+    }
+
+    async function streamText(el, text, speed) {
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        el.appendChild(cursor);
+        const words = text.split(' ');
+        for (let i = 0; i < words.length; i++) {
+            el.insertBefore(document.createTextNode((i > 0 ? ' ' : '') + words[i]), cursor);
+            await sleep(speed + Math.random() * 15);
+        }
+        cursor.remove();
+    }
+
+    function copySummary() {
+        const content = document.getElementById('output-content');
+        navigator.clipboard.writeText(content.innerText).then(() => {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        });
+    }
+
+    // ─── SAMPLE TEXT ───
+    const sampleText = `Quarterly Business Review — Q3 2026
+
+Executive Summary
+
+The third quarter of 2026 has delivered results that exceeded our initial projections across several key metrics. Total revenue reached \u00a314.2 million, representing a 23% year-on-year increase and surpassing analyst consensus estimates of \u00a313.5 million. This growth was primarily driven by our continued expansion into European markets and the successful launch of our new product line in July.
+
+European Market Performance
+
+Our European operations have been the standout performer this quarter. The region contributed 38% of all new revenue, with Germany and the Nordic countries showing particularly strong adoption rates. Our Munich office, established just nine months ago, has already secured 14 enterprise accounts and built a pipeline valued at \u00a33.2 million. The Nordic expansion, led by our Stockholm-based team, has benefited from a strong product-market fit with the region's emphasis on digital transformation and sustainability.
+
+New Product Launch
+
+The product line launched in July has exceeded initial expectations, capturing approximately 12% market share in its category within the first full quarter. Customer feedback has been overwhelmingly positive, with a Net Promoter Score of 67 \u2014 significantly above the industry average of 42. Early adopters have highlighted the AI-powered analytics features as a key differentiator, validating our increased R&D investment in this area.
+
+Financial Performance
+
+Operating margins improved from 18.4% to 21.7% compared to Q2, a notable achievement given that we simultaneously increased R&D spending by 15%. This margin expansion was driven by improved operational efficiency, favourable currency movements, and the higher-margin profile of our new product offerings. Cash flow from operations remained robust at \u00a33.1 million, providing a strong foundation for continued investment.
+
+Customer Metrics
+
+Our customer retention rate improved to 94.2%, up from 91.8% in Q2. This improvement is directly attributable to the revamped onboarding programme launched at the start of Q3, which reduced time-to-value for new customers by approximately 40%. Average revenue per account also increased by 8%, suggesting successful cross-selling and upselling efforts.
+
+North American Market Concerns
+
+While overall results are positive, we note a softening in North American demand. Revenue from this region declined 4% quarter-on-quarter, which we attribute to broader macroeconomic uncertainty and delayed enterprise purchasing decisions. Several large deals that were expected to close in Q3 have been pushed to Q4, and our sales team reports longer decision-making cycles among enterprise prospects.
+
+R&D Investment and Roadmap
+
+Our 15% increase in R&D spending is focused on three core areas: AI-powered analytics (45% of R&D budget), platform scalability (30%), and security enhancements (25%). We remain on track to deliver the AI capabilities outlined in our H1 2027 product roadmap, with beta testing scheduled to begin in Q1 2027.
+
+Outlook
+
+Looking ahead to Q4, we maintain a cautiously optimistic outlook. The European pipeline remains strong, and we expect the North American softness to be partially offset by several large deals currently in final negotiation stages. We are revising our full-year revenue guidance upward to \u00a352-54 million, from the previous range of \u00a349-51 million.`;
+
+</script>
+
+</body>
+</html>
