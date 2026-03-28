@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tesselo &#8212; AI-Assisted Development Studio</title>
-    <meta name="description" content="Tesselo builds MVPs, apps, and digital products at speed using AI-assisted development. From idea to launch, fast.">
+    <meta name="description" content="Tesselo builds websites, web apps, dashboards, internal tools, documents, and AI-powered solutions at speed. You describe it, we build it.">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='2' y='2' width='28' height='28' rx='5' fill='%23c4431a'/><rect x='34' y='34' width='28' height='28' rx='5' fill='%230a0a0a'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,8 +73,15 @@
             justify-content: flex-end; padding: 3rem; padding-bottom: 6rem;
             position: relative; background: var(--black); color: var(--white); overflow: hidden;
         }
-        .hero-bg-tiles { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: hidden; opacity: 0.035; }
-        .hero-bg-tiles .bg-tile { position: absolute; border-radius: 8px; background: var(--accent); }
+        .hero-bg-tiles { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: hidden; }
+        .hero-bg-tiles .bg-tile {
+            position: absolute; border-radius: 5px;
+            opacity: 0; animation: tileAppear 0.6s ease forwards;
+        }
+        @keyframes tileAppear {
+            from { opacity: 0; transform: scale(0.7) rotate(-5deg); }
+            to { opacity: var(--tile-op, 0.12); transform: scale(1) rotate(var(--tile-rot, 0deg)); }
+        }
         .hero-content { position: relative; z-index: 1; }
         .hero h1 {
             font-family: var(--font-serif); font-weight: 400;
@@ -102,7 +109,7 @@
 
         /* SERVICES */
         .services { background: var(--white); }
-        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--grey-light); margin-top: 2rem; }
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--grey-light); margin-top: 2rem; }
         .service-card { background: var(--white); padding: 3rem 2.5rem; transition: background 0.5s ease, color 0.5s ease, transform 0.3s ease; cursor: default; position: relative; }
         .service-card:hover { background: var(--black); color: var(--white); transform: scale(1.02); z-index: 2; }
         .service-card:hover .service-num { color: var(--accent); }
@@ -230,12 +237,70 @@
 
     <section class="hero" data-nav="light">
         <div class="hero-bg-tiles">
-            <div class="bg-tile" style="width:80px;height:80px;top:10%;left:5%;transform:rotate(12deg);"></div>
-            <div class="bg-tile" style="width:120px;height:120px;top:20%;right:15%;transform:rotate(-8deg);"></div>
-            <div class="bg-tile" style="width:60px;height:60px;top:55%;left:20%;transform:rotate(25deg);"></div>
-            <div class="bg-tile" style="width:100px;height:100px;top:65%;right:8%;transform:rotate(-15deg);"></div>
-            <div class="bg-tile" style="width:50px;height:50px;top:35%;left:50%;transform:rotate(40deg);"></div>
-            <div class="bg-tile" style="width:90px;height:90px;top:80%;left:60%;transform:rotate(-20deg);"></div>
+            <!-- Core cluster top-right - large, bold -->
+            <div class="bg-tile" style="width:64px;height:64px;top:2%;right:2%;background:var(--accent);--tile-op:0.35;--tile-rot:0deg;animation-delay:0.3s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:2%;right:calc(2% + 68px);background:var(--accent);--tile-op:0.28;--tile-rot:0deg;animation-delay:0.38s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:2%;right:calc(2% + 136px);background:var(--accent);--tile-op:0.20;--tile-rot:0deg;animation-delay:0.44s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 68px);right:2%;background:var(--white);--tile-op:0.12;--tile-rot:0deg;animation-delay:0.42s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 68px);right:calc(2% + 68px);background:var(--accent);--tile-op:0.30;--tile-rot:0deg;animation-delay:0.48s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 68px);right:calc(2% + 136px);background:var(--white);--tile-op:0.08;--tile-rot:0deg;animation-delay:0.52s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 136px);right:2%;background:var(--accent);--tile-op:0.22;--tile-rot:0deg;animation-delay:0.5s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 136px);right:calc(2% + 68px);background:var(--accent);--tile-op:0.15;--tile-rot:0deg;animation-delay:0.56s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 136px);right:calc(2% + 136px);background:var(--accent);--tile-op:0.10;--tile-rot:0deg;animation-delay:0.6s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:2%;right:calc(2% + 204px);background:var(--white);--tile-op:0.06;--tile-rot:0deg;animation-delay:0.58s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 68px);right:calc(2% + 204px);background:var(--accent);--tile-op:0.10;--tile-rot:0deg;animation-delay:0.64s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 204px);right:2%;background:var(--white);--tile-op:0.07;--tile-rot:0deg;animation-delay:0.62s;"></div>
+            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 204px);right:calc(2% + 68px);background:var(--accent);--tile-op:0.09;--tile-rot:0deg;animation-delay:0.66s;"></div>
+
+            <!-- Second ring - starting to break apart, spreading left -->
+            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 278px);right:calc(2% + 10px);background:var(--accent);--tile-op:0.16;--tile-rot:3deg;animation-delay:0.72s;"></div>
+            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 278px);right:calc(2% + 72px);background:var(--accent);--tile-op:0.11;--tile-rot:-2deg;animation-delay:0.76s;"></div>
+            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 278px);right:calc(2% + 140px);background:var(--white);--tile-op:0.05;--tile-rot:4deg;animation-delay:0.8s;"></div>
+            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 204px);right:calc(2% + 148px);background:var(--accent);--tile-op:0.08;--tile-rot:-3deg;animation-delay:0.78s;"></div>
+            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 136px);right:calc(2% + 212px);background:var(--accent);--tile-op:0.07;--tile-rot:2deg;animation-delay:0.82s;"></div>
+            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 68px);right:calc(2% + 274px);background:var(--white);--tile-op:0.05;--tile-rot:-4deg;animation-delay:0.86s;"></div>
+            <div class="bg-tile" style="width:52px;height:52px;top:2%;right:calc(2% + 276px);background:var(--accent);--tile-op:0.08;--tile-rot:3deg;animation-delay:0.84s;"></div>
+            <div class="bg-tile" style="width:52px;height:52px;top:2%;right:calc(2% + 340px);background:var(--accent);--tile-op:0.06;--tile-rot:-2deg;animation-delay:0.88s;"></div>
+            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 68px);right:calc(2% + 340px);background:var(--white);--tile-op:0.04;--tile-rot:3deg;animation-delay:0.9s;"></div>
+
+            <!-- Mid scatter - spreading across and falling down -->
+            <div class="bg-tile" style="width:44px;height:44px;top:42%;right:5%;background:var(--accent);--tile-op:0.14;--tile-rot:8deg;animation-delay:0.92s;"></div>
+            <div class="bg-tile" style="width:44px;height:44px;top:48%;right:12%;background:var(--accent);--tile-op:0.10;--tile-rot:-10deg;animation-delay:0.96s;"></div>
+            <div class="bg-tile" style="width:40px;height:40px;top:38%;right:18%;background:var(--white);--tile-op:0.06;--tile-rot:14deg;animation-delay:1.0s;"></div>
+            <div class="bg-tile" style="width:40px;height:40px;top:52%;right:20%;background:var(--accent);--tile-op:0.08;--tile-rot:-6deg;animation-delay:1.02s;"></div>
+            <div class="bg-tile" style="width:38px;height:38px;top:35%;right:28%;background:var(--accent);--tile-op:0.07;--tile-rot:18deg;animation-delay:1.04s;"></div>
+            <div class="bg-tile" style="width:38px;height:38px;top:22%;right:34%;background:var(--accent);--tile-op:0.06;--tile-rot:-8deg;animation-delay:1.06s;"></div>
+            <div class="bg-tile" style="width:36px;height:36px;top:44%;right:32%;background:var(--white);--tile-op:0.04;--tile-rot:12deg;animation-delay:1.08s;"></div>
+            <div class="bg-tile" style="width:36px;height:36px;top:15%;right:40%;background:var(--accent);--tile-op:0.06;--tile-rot:-15deg;animation-delay:1.1s;"></div>
+            <div class="bg-tile" style="width:36px;height:36px;top:28%;right:44%;background:var(--accent);--tile-op:0.05;--tile-rot:10deg;animation-delay:1.12s;"></div>
+            <div class="bg-tile" style="width:34px;height:34px;top:8%;right:48%;background:var(--white);--tile-op:0.04;--tile-rot:-5deg;animation-delay:1.14s;"></div>
+            <div class="bg-tile" style="width:34px;height:34px;top:40%;right:42%;background:var(--accent);--tile-op:0.05;--tile-rot:8deg;animation-delay:1.16s;"></div>
+
+            <!-- Far scatter - reaching across the page and falling further -->
+            <div class="bg-tile" style="width:28px;height:28px;top:58%;right:15%;background:var(--accent);--tile-op:0.07;--tile-rot:-22deg;animation-delay:1.18s;"></div>
+            <div class="bg-tile" style="width:28px;height:28px;top:55%;right:34%;background:var(--accent);--tile-op:0.05;--tile-rot:28deg;animation-delay:1.2s;"></div>
+            <div class="bg-tile" style="width:26px;height:26px;top:62%;right:8%;background:var(--white);--tile-op:0.04;--tile-rot:-35deg;animation-delay:1.22s;"></div>
+            <div class="bg-tile" style="width:26px;height:26px;top:50%;right:48%;background:var(--accent);--tile-op:0.04;--tile-rot:30deg;animation-delay:1.24s;"></div>
+            <div class="bg-tile" style="width:24px;height:24px;top:65%;right:26%;background:var(--accent);--tile-op:0.04;--tile-rot:-25deg;animation-delay:1.26s;"></div>
+            <div class="bg-tile" style="width:24px;height:24px;top:18%;right:52%;background:var(--accent);--tile-op:0.04;--tile-rot:20deg;animation-delay:1.28s;"></div>
+            <div class="bg-tile" style="width:22px;height:22px;top:35%;right:54%;background:var(--white);--tile-op:0.03;--tile-rot:-18deg;animation-delay:1.3s;"></div>
+            <div class="bg-tile" style="width:22px;height:22px;top:58%;right:44%;background:var(--accent);--tile-op:0.04;--tile-rot:35deg;animation-delay:1.32s;"></div>
+            <div class="bg-tile" style="width:20px;height:20px;top:70%;right:18%;background:var(--accent);--tile-op:0.03;--tile-rot:32deg;animation-delay:1.34s;"></div>
+            <div class="bg-tile" style="width:20px;height:20px;top:68%;right:38%;background:var(--white);--tile-op:0.03;--tile-rot:-42deg;animation-delay:1.36s;"></div>
+            <div class="bg-tile" style="width:20px;height:20px;top:10%;right:58%;background:var(--accent);--tile-op:0.03;--tile-rot:15deg;animation-delay:1.38s;"></div>
+            <div class="bg-tile" style="width:18px;height:18px;top:48%;right:56%;background:var(--accent);--tile-op:0.03;--tile-rot:-28deg;animation-delay:1.4s;"></div>
+
+            <!-- Furthest drift - tiny tiles reaching far left and bottom -->
+            <div class="bg-tile" style="width:16px;height:16px;top:25%;right:60%;background:var(--accent);--tile-op:0.025;--tile-rot:40deg;animation-delay:1.42s;"></div>
+            <div class="bg-tile" style="width:16px;height:16px;top:72%;right:10%;background:var(--accent);--tile-op:0.025;--tile-rot:-35deg;animation-delay:1.44s;"></div>
+            <div class="bg-tile" style="width:14px;height:14px;top:60%;right:55%;background:var(--accent);--tile-op:0.02;--tile-rot:45deg;animation-delay:1.46s;"></div>
+            <div class="bg-tile" style="width:14px;height:14px;top:75%;right:30%;background:var(--white);--tile-op:0.02;--tile-rot:-40deg;animation-delay:1.48s;"></div>
+            <div class="bg-tile" style="width:14px;height:14px;top:5%;right:64%;background:var(--accent);--tile-op:0.02;--tile-rot:22deg;animation-delay:1.5s;"></div>
+            <div class="bg-tile" style="width:12px;height:12px;top:42%;right:62%;background:var(--accent);--tile-op:0.02;--tile-rot:-48deg;animation-delay:1.52s;"></div>
+            <div class="bg-tile" style="width:12px;height:12px;top:76%;right:48%;background:var(--accent);--tile-op:0.02;--tile-rot:38deg;animation-delay:1.54s;"></div>
+            <div class="bg-tile" style="width:10px;height:10px;top:68%;right:58%;background:var(--accent);--tile-op:0.015;--tile-rot:-52deg;animation-delay:1.56s;"></div>
+            <div class="bg-tile" style="width:10px;height:10px;top:32%;right:66%;background:var(--white);--tile-op:0.015;--tile-rot:42deg;animation-delay:1.58s;"></div>
+            <div class="bg-tile" style="width:10px;height:10px;top:78%;right:22%;background:var(--accent);--tile-op:0.015;--tile-rot:-30deg;animation-delay:1.6s;"></div>
         </div>
         <div class="hero-content">
             <h1>
@@ -243,36 +308,51 @@
                 <span class="line-2">Ship it.</span>
             </h1>
             <div class="hero-bottom">
-                <p class="hero-sub">Tesselo is a development studio that builds MVPs, apps, and digital products at speed &#8212; using AI-assisted development to go from idea to launch, fast.</p>
+                <p class="hero-sub">From websites to web apps, dashboards to documents &#8212; if you can describe it, Tesselo can build it. AI-assisted development that moves at the speed of your ideas.</p>
                 <span class="hero-tag">AI-Assisted Development Studio</span>
             </div>
         </div>
     </section>
 
     <section class="services" id="services" data-nav="dark">
-        <div class="section-label fade-in">What I do</div>
+        <div class="section-label fade-in">What I build</div>
         <div class="services-grid">
             <div class="service-card fade-in stagger-1">
                 <div class="service-num">01</div>
-                <h3 class="char-reveal">MVP Development</h3>
-                <p>Got an idea? I'll turn it into a working product. Full MVPs built and shipped in weeks, not months. React apps, dashboards, SaaS tools, mobile-first platforms &#8212; designed, built, and ready to test with real users.</p>
+                <h3 class="char-reveal">Websites &#38; Landing Pages</h3>
+                <p>Marketing sites, portfolios, product pages, and business homepages. Designed, built, and deployed fast &#8212; with animations, responsive layouts, and SEO baked in.</p>
             </div>
             <div class="service-card fade-in stagger-2">
                 <div class="service-num">02</div>
-                <h3 class="char-reveal">Ongoing Development</h3>
-                <p>Retainer-based support for products that need continuous improvement. New features, bug fixes, iteration cycles. I work as an embedded part of your team without the overhead of a full hire.</p>
+                <h3 class="char-reveal">Web Apps &#38; SaaS Tools</h3>
+                <p>Full MVPs, dashboards, platforms, and customer-facing applications. From idea to working product in weeks, not months &#8212; ready to test with real users.</p>
             </div>
-            <div class="service-card fade-in stagger-3">
+            <div class="service-card fade-in stagger-1">
                 <div class="service-num">03</div>
-                <h3 class="char-reveal">AI Dev Consulting</h3>
-                <p>Want to understand how AI-assisted development could accelerate your team or product? I'll show you what's possible, help you set up workflows, and advise on where AI fits into your build process.</p>
+                <h3 class="char-reveal">Internal Tools &#38; Automations</h3>
+                <p>Task boards, CRMs, workflow tools, booking systems. Replace manual processes and spreadsheet chaos with custom-built solutions that actually work.</p>
+            </div>
+            <div class="service-card fade-in stagger-2">
+                <div class="service-num">04</div>
+                <h3 class="char-reveal">Documents &#38; Presentations</h3>
+                <p>Reports, proposals, pitch decks, spreadsheets, and formatted documents. Professionally structured, branded, and ready to send &#8212; no templates, no fluff.</p>
+            </div>
+            <div class="service-card fade-in stagger-1">
+                <div class="service-num">05</div>
+                <h3 class="char-reveal">Data &#38; Visualisation</h3>
+                <p>Analysis, charts, interactive dashboards, and data pipelines. Turn raw numbers into clear insights your team can actually act on.</p>
+            </div>
+            <div class="service-card fade-in stagger-2">
+                <div class="service-num">06</div>
+                <h3 class="char-reveal">AI-Powered Solutions</h3>
+                <p>Smart tools with AI at the core. Summarisers, content generators, analysers, and automations &#8212; custom-built to your specific needs.</p>
             </div>
         </div>
     </section>
 
     <section class="work" id="work" data-nav="light">
         <div class="section-label fade-in">Selected Work</div>
-        <p class="work-intro slide-in-left">Every piece ships. No concepts, no wireframes left in drawers. These are <em>real products</em> built with AI-assisted development.</p>
+        <p class="work-intro slide-in-left">You describe it. I build it. These are <em>real products</em> built with AI-assisted development &#8212; each one shipped, not just designed.</p>
         <div class="project-grid">
             <a href="/bookit.html" class="project-card fade-in stagger-1" style="text-decoration:none;color:inherit;">
                 <span class="project-placeholder" style="border-color:var(--accent);color:var(--accent);">Live Demo</span>
