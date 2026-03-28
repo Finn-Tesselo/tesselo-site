@@ -39,18 +39,22 @@
         }
         nav.revealed { opacity: 1; transform: translateY(0); }
         nav .logo {
-            display: flex; align-items: center;
+            display: flex; align-items: center; gap: 0.75rem;
             text-decoration: none; position: relative; z-index: 101;
         }
-        .logo-img {
-            height: 42px; width: auto;
-        }
+        .logo-mark { display: flex; position: relative; width: 32px; height: 32px; }
+        .logo-mark .tile { position: absolute; width: 15px; height: 15px; border-radius: 3px; }
+        .logo-mark .tile-accent { background: var(--accent); top: 0; left: 0; }
+        .logo-mark .tile-dark { top: 17px; left: 17px; }
+        nav.nav-light .logo-text { color: var(--white); }
         nav.nav-light .nav-links a { color: var(--white); }
         nav.nav-light .nav-links a::after { background: var(--white); }
-        nav.nav-light .logo-img { filter: none; }
+        nav.nav-light .tile-dark { background: var(--white); }
+        nav.nav-dark .logo-text { color: var(--black); }
         nav.nav-dark .nav-links a { color: var(--black); }
         nav.nav-dark .nav-links a::after { background: var(--black); }
-        nav.nav-dark .logo-img { filter: brightness(0.12); }
+        nav.nav-dark .tile-dark { background: var(--black); }
+        .logo-text { font-family: var(--font-serif); font-size: 1.5rem; letter-spacing: 0.02em; transition: color 0.4s ease; }
         nav .nav-links { display: flex; gap: 2.5rem; list-style: none; position: relative; z-index: 101; }
         nav .nav-links a {
             font-size: 0.8rem; font-weight: 400; text-decoration: none; text-transform: uppercase;
@@ -217,7 +221,11 @@
 
     <nav id="main-nav" class="nav-light">
         <a href="#" class="logo">
-            <img src="logo.png" alt="Tesselo" class="logo-img">
+            <div class="logo-mark">
+                <div class="tile tile-accent"></div>
+                <div class="tile tile-dark"></div>
+            </div>
+            <span class="logo-text">Tesselo</span>
         </a>
         <ul class="nav-links">
             <li><a href="#services">Services</a></li>
@@ -439,7 +447,7 @@
 
     <footer>
         <div class="footer-logo">
-            <img src="logo.png" alt="Tesselo" style="height:20px;width:auto;filter:brightness(0.6);">
+            <div class="tile" style="width:8px;height:8px;border-radius:2px;background:var(--accent);"></div>
             <span>&#169; 2026 Tesselo</span>
         </div>
         <span>Built with AI-assisted development</span>
