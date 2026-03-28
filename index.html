@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesselo — AI-Assisted Development Studio</title>
+    <title>Tesselo &#8212; AI-Assisted Development Studio</title>
     <meta name="description" content="Tesselo builds MVPs, apps, and digital products at speed using AI-assisted development. From idea to launch, fast.">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='2' y='2' width='28' height='28' rx='5' fill='%23c4431a'/><rect x='34' y='34' width='28' height='28' rx='5' fill='%230a0a0a'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,11 +19,9 @@
             --font-serif: 'Instrument Serif', Georgia, serif;
             --font-sans: 'DM Sans', -apple-system, sans-serif;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         ::selection { background: var(--accent); color: var(--white); }
         html { scroll-behavior: smooth; font-size: 16px; }
-
         body {
             background: var(--white); color: var(--black);
             font-family: var(--font-sans); font-weight: 300;
@@ -31,362 +29,163 @@
             overflow-x: hidden;
         }
 
-        /* ─── NAV ─── */
+        /* NAV */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             padding: 1.25rem 3rem;
             display: flex; justify-content: space-between; align-items: center;
             opacity: 0; transform: translateY(-20px);
             transition: opacity 0.8s ease, transform 0.8s ease;
-            pointer-events: auto;
         }
         nav.revealed { opacity: 1; transform: translateY(0); }
-
         nav .logo {
             display: flex; align-items: center; gap: 0.75rem;
             text-decoration: none; position: relative; z-index: 101;
         }
-
-        .logo-mark {
-            display: flex; position: relative;
-            width: 32px; height: 32px;
-        }
-        .logo-mark .tile {
-            position: absolute; width: 15px; height: 15px; border-radius: 3px;
-        }
+        .logo-mark { display: flex; position: relative; width: 32px; height: 32px; }
+        .logo-mark .tile { position: absolute; width: 15px; height: 15px; border-radius: 3px; }
         .logo-mark .tile-accent { background: var(--accent); top: 0; left: 0; }
         .logo-mark .tile-dark { top: 17px; left: 17px; }
-
-        /* Nav colours adapt based on section */
         nav.nav-light .logo-text { color: var(--white); }
         nav.nav-light .nav-links a { color: var(--white); }
         nav.nav-light .nav-links a::after { background: var(--white); }
         nav.nav-light .tile-dark { background: var(--white); }
-
         nav.nav-dark .logo-text { color: var(--black); }
         nav.nav-dark .nav-links a { color: var(--black); }
         nav.nav-dark .nav-links a::after { background: var(--black); }
         nav.nav-dark .tile-dark { background: var(--black); }
-
-        .logo-text {
-            font-family: var(--font-serif);
-            font-size: 1.5rem; letter-spacing: 0.02em;
-            transition: color 0.4s ease;
-        }
-
-        nav .nav-links {
-            display: flex; gap: 2.5rem; list-style: none;
-            position: relative; z-index: 101;
-        }
+        .logo-text { font-family: var(--font-serif); font-size: 1.5rem; letter-spacing: 0.02em; transition: color 0.4s ease; }
+        nav .nav-links { display: flex; gap: 2.5rem; list-style: none; position: relative; z-index: 101; }
         nav .nav-links a {
-            font-size: 0.8rem; font-weight: 400;
-            text-decoration: none; text-transform: uppercase;
-            letter-spacing: 0.12em; transition: opacity 0.3s, color 0.4s ease;
-            position: relative; cursor: pointer;
+            font-size: 0.8rem; font-weight: 400; text-decoration: none; text-transform: uppercase;
+            letter-spacing: 0.12em; transition: opacity 0.3s, color 0.4s ease; position: relative; cursor: pointer;
         }
         nav .nav-links a::after {
             content: ''; position: absolute; bottom: -4px; left: 0;
-            width: 0; height: 1px;
-            transition: width 0.3s ease, background 0.4s ease;
+            width: 0; height: 1px; transition: width 0.3s ease, background 0.4s ease;
         }
         nav .nav-links a:hover::after { width: 100%; }
         nav .nav-links a:hover { opacity: 0.7; }
 
-        /* ─── HERO ─── */
+        /* HERO */
         .hero {
             min-height: 100vh; display: flex; flex-direction: column;
             justify-content: flex-end; padding: 3rem; padding-bottom: 6rem;
-            position: relative; background: var(--black); color: var(--white);
-            overflow: hidden;
+            position: relative; background: var(--black); color: var(--white); overflow: hidden;
         }
-
-        .hero-bg-tiles {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 0; overflow: hidden; opacity: 0.035;
-        }
-        .hero-bg-tiles .bg-tile {
-            position: absolute; border-radius: 8px; background: var(--accent);
-        }
-
+        .hero-bg-tiles { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: hidden; opacity: 0.035; }
+        .hero-bg-tiles .bg-tile { position: absolute; border-radius: 8px; background: var(--accent); }
         .hero-content { position: relative; z-index: 1; }
-
         .hero h1 {
             font-family: var(--font-serif); font-weight: 400;
-            font-size: clamp(3.5rem, 9vw, 8rem);
-            line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 3rem;
+            font-size: clamp(3.5rem, 9vw, 8rem); line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 3rem;
         }
-        .hero h1 .line-1 {
-            display: inline-block; opacity: 0; transform: translateY(40px);
-            animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
-        }
-        .hero h1 .line-2 {
-            display: inline-block; margin-left: 15%; color: var(--accent);
-            opacity: 0; transform: translateY(40px);
-            animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards;
-        }
-        @keyframes heroReveal {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hero-bottom {
-            display: flex; justify-content: space-between;
-            align-items: flex-end; gap: 2rem;
-            opacity: 0; transform: translateY(15px);
-            animation: fadeUp 0.8s ease 1s forwards;
-        }
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        .hero h1 .line-1 { display: inline-block; opacity: 0; transform: translateY(40px); animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards; }
+        .hero h1 .line-2 { display: inline-block; margin-left: 15%; color: var(--accent); opacity: 0; transform: translateY(40px); animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards; }
+        @keyframes heroReveal { to { opacity: 1; transform: translateY(0); } }
+        .hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; opacity: 0; transform: translateY(15px); animation: fadeUp 0.8s ease 1s forwards; }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
         .hero-sub { max-width: 420px; color: var(--grey); font-size: 1rem; line-height: 1.7; }
         .hero-tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: #444; white-space: nowrap; }
 
-        /* ─── SECTION COMMON ─── */
+        /* SECTIONS */
         section { padding: 8rem 3rem; }
         .section-label {
             font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em;
-            color: var(--grey); margin-bottom: 3rem;
-            display: flex; align-items: center; gap: 1.5rem;
+            color: var(--grey); margin-bottom: 3rem; display: flex; align-items: center; gap: 1.5rem;
         }
         .section-label::after {
             content: ''; flex: 1; height: 1px; background: var(--grey-light);
-            transform: scaleX(0); transform-origin: left;
-            transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .section-label.visible::after { transform: scaleX(1); }
 
-        /* ─── SERVICES ─── */
+        /* SERVICES */
         .services { background: var(--white); }
-        .services-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 1px; background: var(--grey-light); margin-top: 2rem;
-        }
-        .service-card {
-            background: var(--white); padding: 3rem 2.5rem;
-            transition: background 0.5s ease, color 0.5s ease, transform 0.3s ease;
-            cursor: default; position: relative;
-        }
-        .service-card:hover {
-            background: var(--black); color: var(--white);
-            transform: scale(1.02); z-index: 2;
-        }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--grey-light); margin-top: 2rem; }
+        .service-card { background: var(--white); padding: 3rem 2.5rem; transition: background 0.5s ease, color 0.5s ease, transform 0.3s ease; cursor: default; position: relative; }
+        .service-card:hover { background: var(--black); color: var(--white); transform: scale(1.02); z-index: 2; }
         .service-card:hover .service-num { color: var(--accent); }
-        .service-num {
-            font-family: var(--font-serif); font-size: 3rem;
-            color: var(--grey-light); transition: color 0.5s ease; margin-bottom: 2rem;
-        }
-        .service-card h3 {
-            font-family: var(--font-serif); font-size: 1.75rem;
-            font-weight: 400; margin-bottom: 1rem; letter-spacing: -0.01em;
-        }
-        .service-card p {
-            font-size: 0.9rem; line-height: 1.7; color: var(--grey);
-            transition: color 0.5s ease;
-        }
+        .service-num { font-family: var(--font-serif); font-size: 3rem; color: var(--grey-light); transition: color 0.5s ease; margin-bottom: 2rem; }
+        .service-card h3 { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 400; margin-bottom: 1rem; letter-spacing: -0.01em; }
+        .service-card p { font-size: 0.9rem; line-height: 1.7; color: var(--grey); transition: color 0.5s ease; }
         .service-card:hover p { color: var(--grey-light); }
 
-        /* ─── WORK / PORTFOLIO ─── */
+        /* WORK */
         .work { background: var(--black); color: var(--white); }
         .work .section-label { color: var(--grey); }
         .work .section-label::after { background: #333; }
-        .work-intro {
-            max-width: 600px; font-family: var(--font-serif);
-            font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 400;
-            line-height: 1.4; margin-bottom: 5rem; letter-spacing: -0.01em;
-        }
+        .work-intro { max-width: 600px; font-family: var(--font-serif); font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 400; line-height: 1.4; margin-bottom: 5rem; letter-spacing: -0.01em; }
         .work-intro em { color: var(--accent); font-style: italic; }
-
         .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-        .project-card {
-            border: 1px solid #222; padding: 2.5rem; position: relative;
-            overflow: hidden; min-height: 280px;
-            display: flex; flex-direction: column; justify-content: flex-end;
-            transition: border-color 0.4s, transform 0.3s ease, box-shadow 0.4s ease;
-        }
-        .project-card:hover {
-            border-color: var(--accent); transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(196, 67, 26, 0.1);
-        }
-        .project-tag {
-            font-size: 0.65rem; text-transform: uppercase;
-            letter-spacing: 0.2em; color: var(--grey); margin-bottom: 1rem;
-        }
-        .project-card h4 {
-            font-family: var(--font-serif); font-size: 1.5rem;
-            font-weight: 400; margin-bottom: 0.75rem;
-        }
+        .project-card { border: 1px solid #222; padding: 2.5rem; position: relative; overflow: hidden; min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end; transition: border-color 0.4s, transform 0.3s ease, box-shadow 0.4s ease; }
+        .project-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(196, 67, 26, 0.1); }
+        .project-tag { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--grey); margin-bottom: 1rem; }
+        .project-card h4 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin-bottom: 0.75rem; }
         .project-card p { font-size: 0.85rem; color: var(--grey); line-height: 1.6; }
-        .project-placeholder {
-            position: absolute; top: 1.5rem; right: 1.5rem;
-            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em;
-            color: #333; border: 1px solid #333; padding: 0.3rem 0.7rem;
-            transition: all 0.3s;
-        }
+        .project-placeholder { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: #333; border: 1px solid #333; padding: 0.3rem 0.7rem; transition: all 0.3s; }
         .project-card:hover .project-placeholder { border-color: var(--accent); color: var(--accent); }
 
-        /* ─── PROCESS ─── */
+        /* PROCESS */
         .process { background: var(--white); }
-        .process-steps {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 0; margin-top: 2rem;
-        }
-        .process-step {
-            padding: 2.5rem 2rem; border-left: 1px solid var(--grey-light);
-            transition: background 0.3s ease;
-        }
+        .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 2rem; }
+        .process-step { padding: 2.5rem 2rem; border-left: 1px solid var(--grey-light); transition: background 0.3s ease; }
         .process-step:first-child { border-left: none; padding-left: 0; }
         .process-step:hover { background: rgba(196, 67, 26, 0.03); }
-        .step-num {
-            font-family: var(--font-serif); font-size: 0.9rem;
-            color: var(--accent); margin-bottom: 1.5rem;
-            transition: transform 0.3s ease;
-        }
+        .step-num { font-family: var(--font-serif); font-size: 0.9rem; color: var(--accent); margin-bottom: 1.5rem; transition: transform 0.3s ease; }
         .process-step:hover .step-num { transform: translateX(4px); }
-        .process-step h4 {
-            font-family: var(--font-serif); font-size: 1.25rem;
-            font-weight: 400; margin-bottom: 0.75rem;
-        }
+        .process-step h4 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400; margin-bottom: 0.75rem; }
         .process-step p { font-size: 0.85rem; color: var(--grey); line-height: 1.6; }
 
-        /* ─── CONTACT ─── */
-        .contact {
-            background: var(--black); color: var(--white);
-            padding: 8rem 3rem;
-        }
-        .contact-inner {
-            max-width: 900px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
-            align-items: start;
-        }
-        .contact-text h2 {
-            font-family: var(--font-serif);
-            font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 400;
-            letter-spacing: -0.03em; margin-bottom: 1.25rem; line-height: 1.05;
-        }
+        /* CONTACT */
+        .contact { background: var(--black); color: var(--white); padding: 8rem 3rem; }
+        .contact-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+        .contact-text h2 { font-family: var(--font-serif); font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 400; letter-spacing: -0.03em; margin-bottom: 1.25rem; line-height: 1.05; }
         .contact-text h2 em { font-style: italic; color: var(--accent); }
-        .contact-text > p {
-            color: var(--grey); font-size: 0.95rem; line-height: 1.7;
-            margin-bottom: 2rem;
-        }
-        .contact-direct {
-            font-size: 0.8rem; color: var(--grey);
-        }
-        .contact-direct a {
-            color: var(--white); text-decoration: none;
-            transition: color 0.3s;
-        }
+        .contact-text > p { color: var(--grey); font-size: 0.95rem; line-height: 1.7; margin-bottom: 2rem; }
+        .contact-direct { font-size: 0.8rem; color: var(--grey); }
+        .contact-direct a { color: var(--white); text-decoration: none; transition: color 0.3s; }
         .contact-direct a:hover { color: var(--accent); }
-
-        .contact-form {
-            display: flex; flex-direction: column; gap: 1rem;
-        }
-        .form-row {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-        }
-        .contact-form label {
-            display: block; font-size: 0.7rem; font-weight: 500;
-            text-transform: uppercase; letter-spacing: 0.1em;
-            color: var(--grey); margin-bottom: 0.4rem;
-        }
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%; padding: 0.8rem 1rem;
-            background: #1a1a1e; border: 1px solid #2a2a30;
-            border-radius: 6px; color: var(--white);
-            font-family: var(--font-sans); font-size: 0.9rem; font-weight: 300;
-            outline: none; transition: border-color 0.3s ease;
-        }
-        .contact-form input::placeholder,
-        .contact-form textarea::placeholder {
-            color: #4a4a52;
-        }
-        .contact-form input:focus,
-        .contact-form textarea:focus {
-            border-color: var(--accent);
-        }
-        .contact-form textarea {
-            resize: vertical; min-height: 100px;
-        }
-        .form-submit {
-            display: inline-block; font-family: var(--font-sans);
-            font-size: 0.85rem; font-weight: 500; text-transform: uppercase;
-            letter-spacing: 0.12em; color: var(--white);
-            padding: 1rem 2.5rem; border: 1px solid #444;
-            background: transparent; cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative; overflow: hidden; border-radius: 0;
-            align-self: flex-start;
-        }
-        .form-submit::before {
-            content: ''; position: absolute; top: 0; left: -100%;
-            width: 100%; height: 100%; background: var(--accent);
-            transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1); z-index: 0;
-        }
+        .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .contact-form label { display: block; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--grey); margin-bottom: 0.4rem; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 0.8rem 1rem; background: #1a1a1e; border: 1px solid #2a2a30; border-radius: 6px; color: var(--white); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 300; outline: none; transition: border-color 0.3s ease; }
+        .contact-form input::placeholder, .contact-form textarea::placeholder { color: #4a4a52; }
+        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); }
+        .contact-form textarea { resize: vertical; min-height: 100px; }
+        .form-submit { display: inline-block; font-family: var(--font-sans); font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--white); padding: 1rem 2.5rem; border: 1px solid #444; background: transparent; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); position: relative; overflow: hidden; border-radius: 0; align-self: flex-start; }
+        .form-submit::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: var(--accent); transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1); z-index: 0; }
         .form-submit:hover::before { left: 0; }
         .form-submit:hover { border-color: var(--accent); }
         .form-submit span { position: relative; z-index: 1; }
-
-        .form-success {
-            display: none; text-align: center; padding: 3rem 1rem;
-        }
+        .form-success { display: none; text-align: center; padding: 3rem 1rem; }
         .form-success.show { display: block; }
-        .form-success .check {
-            width: 56px; height: 56px; border-radius: 50%;
-            background: rgba(196, 67, 26, 0.15); margin: 0 auto 1.25rem;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; animation: scaleIn 0.5s ease;
-        }
-        @keyframes scaleIn {
-            0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); }
-        }
-        .form-success h3 {
-            font-family: var(--font-serif); font-size: 1.5rem;
-            font-weight: 400; margin-bottom: 0.5rem;
-        }
+        .form-success .check { width: 56px; height: 56px; border-radius: 50%; background: rgba(196, 67, 26, 0.15); margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; animation: scaleIn 0.5s ease; }
+        @keyframes scaleIn { 0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        .form-success h3 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin-bottom: 0.5rem; }
         .form-success p { color: var(--grey); font-size: 0.9rem; }
 
-        /* ─── FOOTER ─── */
-        footer {
-            background: var(--black); color: var(--grey);
-            padding: 2rem 3rem; border-top: 1px solid #1a1a1a;
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.75rem; letter-spacing: 0.05em;
-        }
+        /* FOOTER */
+        footer { background: var(--black); color: var(--grey); padding: 2rem 3rem; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; letter-spacing: 0.05em; }
         .footer-logo { display: flex; align-items: center; gap: 0.5rem; }
         .footer-logo .tile { width: 8px; height: 8px; border-radius: 2px; }
         footer a { color: var(--grey); text-decoration: none; transition: color 0.3s; }
         footer a:hover { color: var(--white); }
 
-        /* ─── ANIMATIONS ─── */
-        .fade-in {
-            opacity: 0; transform: translateY(30px);
-            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-        }
+        /* ANIMATIONS */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-        .slide-in-left {
-            opacity: 0; transform: translateX(-30px);
-            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-        }
+        .slide-in-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
         .slide-in-left.visible { opacity: 1; transform: translateX(0); }
-
-        /* Text character reveal for headings */
-        .char-reveal .char {
-            display: inline-block;
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        .char-reveal.visible .char {
-            opacity: 1; transform: translateY(0);
-        }
+        .char-reveal .char { display: inline-block; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .char-reveal.visible .char { opacity: 1; transform: translateY(0); }
         .char-reveal .space { display: inline-block; width: 0.3em; }
-
         .stagger-1 { transition-delay: 0.1s; }
         .stagger-2 { transition-delay: 0.2s; }
         .stagger-3 { transition-delay: 0.3s; }
         .stagger-4 { transition-delay: 0.4s; }
 
-        /* ─── RESPONSIVE ─── */
+        /* RESPONSIVE */
         @media (max-width: 900px) {
             nav { padding: 1.25rem 1.5rem; }
             nav .nav-links { gap: 1.5rem; }
@@ -413,7 +212,6 @@
 </head>
 <body>
 
-    <!-- NAV -->
     <nav id="main-nav" class="nav-light">
         <a href="#" class="logo">
             <div class="logo-mark">
@@ -430,7 +228,6 @@
         </ul>
     </nav>
 
-    <!-- HERO -->
     <section class="hero" data-nav="light">
         <div class="hero-bg-tiles">
             <div class="bg-tile" style="width:80px;height:80px;top:10%;left:5%;transform:rotate(12deg);"></div>
@@ -446,22 +243,19 @@
                 <span class="line-2">Ship it.</span>
             </h1>
             <div class="hero-bottom">
-                <p class="hero-sub">
-                    Tesselo is a development studio that builds MVPs, apps, and digital products at speed — using AI-assisted development to go from idea to launch, fast.
-                </p>
+                <p class="hero-sub">Tesselo is a development studio that builds MVPs, apps, and digital products at speed &#8212; using AI-assisted development to go from idea to launch, fast.</p>
                 <span class="hero-tag">AI-Assisted Development Studio</span>
             </div>
         </div>
     </section>
 
-    <!-- SERVICES -->
     <section class="services" id="services" data-nav="dark">
         <div class="section-label fade-in">What I do</div>
         <div class="services-grid">
             <div class="service-card fade-in stagger-1">
                 <div class="service-num">01</div>
                 <h3 class="char-reveal">MVP Development</h3>
-                <p>Got an idea? I'll turn it into a working product. Full MVPs built and shipped in weeks, not months. React apps, dashboards, SaaS tools, mobile-first platforms — designed, built, and ready to test with real users.</p>
+                <p>Got an idea? I'll turn it into a working product. Full MVPs built and shipped in weeks, not months. React apps, dashboards, SaaS tools, mobile-first platforms &#8212; designed, built, and ready to test with real users.</p>
             </div>
             <div class="service-card fade-in stagger-2">
                 <div class="service-num">02</div>
@@ -476,35 +270,31 @@
         </div>
     </section>
 
-    <!-- WORK -->
     <section class="work" id="work" data-nav="light">
         <div class="section-label fade-in">Selected Work</div>
-        <p class="work-intro slide-in-left">
-            Every piece ships. No concepts, no wireframes left in drawers. These are <em>real products</em> built with AI-assisted development.
-        </p>
+        <p class="work-intro slide-in-left">Every piece ships. No concepts, no wireframes left in drawers. These are <em>real products</em> built with AI-assisted development.</p>
         <div class="project-grid">
-            <a href="/bookit.html" class="project-card fade-in stagger-1" style="text-decoration: none; color: inherit;">
-                <span class="project-placeholder" style="border-color: var(--accent); color: var(--accent);">Live Demo</span>
-                <div class="project-tag">Web Application — Wellness Studio</div>
+            <a href="/bookit.html" class="project-card fade-in stagger-1" style="text-decoration:none;color:inherit;">
+                <span class="project-placeholder" style="border-color:var(--accent);color:var(--accent);">Live Demo</span>
+                <div class="project-tag">Web Application &#8212; Wellness Studio</div>
                 <h4>BookIt</h4>
-                <p>A fully interactive booking and scheduling app. Service selection, calendar, time slot picker, booking form, and confirmation flow — all working.</p>
+                <p>A fully interactive booking and scheduling app. Service selection, calendar, time slot picker, booking form, and confirmation flow &#8212; all working.</p>
             </a>
-            <a href="/kanflow.html" class="project-card fade-in stagger-2" style="text-decoration: none; color: inherit;">
-                <span class="project-placeholder" style="border-color: var(--accent); color: var(--accent);">Live Demo</span>
-                <div class="project-tag">Internal Tool — Project Management</div>
+            <a href="/kanflow.html" class="project-card fade-in stagger-2" style="text-decoration:none;color:inherit;">
+                <span class="project-placeholder" style="border-color:var(--accent);color:var(--accent);">Live Demo</span>
+                <div class="project-tag">Internal Tool &#8212; Project Management</div>
                 <h4>Kanflow</h4>
-                <p>A drag-and-drop Kanban task board. Columns, task cards with priorities and assignees, progress tracking, and full CRUD — all interactive.</p>
+                <p>A drag-and-drop Kanban task board. Columns, task cards with priorities and assignees, progress tracking, and full CRUD &#8212; all interactive.</p>
             </a>
-            <div class="project-card fade-in stagger-3">
-                <span class="project-placeholder">Coming Soon</span>
+            <a href="/briefly.html" class="project-card fade-in stagger-3" style="text-decoration:none;color:inherit;">
+                <span class="project-placeholder" style="border-color:var(--accent);color:var(--accent);">Live Demo</span>
                 <div class="project-tag">AI-Powered App</div>
                 <h4>Briefly</h4>
-                <p>An AI document summariser. Upload a PDF or paste text, get structured key points, action items, and a TL;DR in seconds.</p>
-            </div>
+                <p>An AI document summariser. Paste any text, get structured key points, action items, and a summary &#8212; with a streaming output effect.</p>
+            </a>
         </div>
     </section>
 
-    <!-- PROCESS -->
     <section class="process" id="process" data-nav="dark">
         <div class="section-label fade-in">How it works</div>
         <div class="process-steps">
@@ -521,7 +311,7 @@
             <div class="process-step fade-in stagger-3">
                 <div class="step-num">iii</div>
                 <h4 class="char-reveal">Iterate</h4>
-                <p>You test, you feedback, I refine. Tight loops until it's right. No long disappearances — you're involved throughout.</p>
+                <p>You test, you feedback, I refine. Tight loops until it's right. No long disappearances &#8212; you're involved throughout.</p>
             </div>
             <div class="process-step fade-in stagger-4">
                 <div class="step-num">iv</div>
@@ -531,13 +321,12 @@
         </div>
     </section>
 
-    <!-- CONTACT -->
     <section class="contact" id="contact" data-nav="light">
         <div class="contact-inner">
             <div class="contact-text fade-in">
                 <h2>Let's <em>build</em><br>something.</h2>
                 <p>Have an idea that needs building? A product that needs improving? Fill in the form and I'll get back to you within 24 hours.</p>
-                <p class="contact-direct">Or email directly: <a href="mailto:hello@tesselo.dev">hello@tesselo.dev</a></p>
+                <p class="contact-direct">Or email directly: <a id="email-link">loading...</a></p>
             </div>
             <div id="contact-form-wrapper">
                 <form class="contact-form fade-in stagger-1" id="contact-form" action="https://formspree.io/f/mjgpgrkk" method="POST">
@@ -548,7 +337,7 @@
                         </div>
                         <div>
                             <label for="email">Email *</label>
-                            <input type="email" id="email" name="email" placeholder="you@company.com" required>
+                            <input type="email" id="email" name="email" placeholder="you&#64;company.com" required>
                         </div>
                     </div>
                     <div class="form-row">
@@ -563,58 +352,64 @@
                     </div>
                     <div>
                         <label for="message">Message *</label>
-                        <textarea id="message" name="message" placeholder="Tell me about your project — what are you building, who is it for, and what's the timeline?" required></textarea>
+                        <textarea id="message" name="message" placeholder="Tell me about your project &#8212; what are you building, who is it for, and what's the timeline?" required></textarea>
                     </div>
                     <button type="submit" class="form-submit"><span>Send Message</span></button>
                 </form>
                 <div class="form-success" id="form-success">
-                    <div class="check">✓</div>
+                    <div class="check">&#10003;</div>
                     <h3>Message sent</h3>
-                    <p>Thanks for reaching out — I'll get back to you within 24 hours.</p>
+                    <p>Thanks for reaching out &#8212; I'll get back to you within 24 hours.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer>
         <div class="footer-logo">
-            <div class="tile tile-accent" style="width:8px;height:8px;border-radius:2px;background:var(--accent);"></div>
-            <span>&copy; 2026 Tesselo</span>
+            <div class="tile" style="width:8px;height:8px;border-radius:2px;background:var(--accent);"></div>
+            <span>&#169; 2026 Tesselo</span>
         </div>
         <span>Built with AI-assisted development</span>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // ─── NAV REVEAL ON LOAD ───
-        window.addEventListener('load', () => {
-            setTimeout(() => {
+    <script>
+        // Email built via JS to prevent Cloudflare email obfuscation
+        (function(){
+            var e = ['hello','tesselo','dev'];
+            var a = document.getElementById('email-link');
+            var addr = e[0]+'@'+e[1]+'.'+e[2];
+            a.href = 'mail'+'to:'+addr;
+            a.textContent = addr;
+        })();
+
+        // Nav reveal
+        window.addEventListener('load', function(){
+            setTimeout(function(){
                 document.getElementById('main-nav').classList.add('revealed');
             }, 200);
         });
 
-        // ─── SCROLL-TRIGGERED ANIMATIONS ───
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+        // Scroll animations
+        var observer = new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+                if(entry.isIntersecting){ entry.target.classList.add('visible'); }
             });
         }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-        document.querySelectorAll('.fade-in, .slide-in-left').forEach(el => observer.observe(el));
+        document.querySelectorAll('.fade-in, .slide-in-left').forEach(function(el){ observer.observe(el); });
 
-        // ─── CHARACTER REVEAL FOR HEADINGS ───
-        document.querySelectorAll('.char-reveal').forEach(el => {
-            const text = el.textContent;
+        // Character reveal
+        document.querySelectorAll('.char-reveal').forEach(function(el){
+            var text = el.textContent;
             el.textContent = '';
-            text.split('').forEach((char, i) => {
-                if (char === ' ') {
-                    const space = document.createElement('span');
+            text.split('').forEach(function(char, i){
+                if(char === ' '){
+                    var space = document.createElement('span');
                     space.className = 'space';
                     el.appendChild(space);
                 } else {
-                    const span = document.createElement('span');
+                    var span = document.createElement('span');
                     span.className = 'char';
                     span.textContent = char;
                     span.style.transitionDelay = (i * 0.025) + 's';
@@ -624,49 +419,46 @@
             observer.observe(el);
         });
 
-        // ─── NAV COLOUR SWITCHING ───
-        const nav = document.getElementById('main-nav');
-        const sections = document.querySelectorAll('section[data-nav]');
-
-        function updateNavColor() {
-            const scrollY = window.scrollY + 60;
-            let current = 'light';
-            sections.forEach(section => {
-                if (section.offsetTop <= scrollY) {
-                    current = section.dataset.nav;
-                }
+        // Nav colour switching
+        var nav = document.getElementById('main-nav');
+        var sections = document.querySelectorAll('section[data-nav]');
+        function updateNavColor(){
+            var scrollY = window.scrollY + 60;
+            var current = 'light';
+            sections.forEach(function(section){
+                if(section.offsetTop <= scrollY){ current = section.dataset.nav; }
             });
             nav.className = nav.className.replace(/nav-light|nav-dark/g, '').trim();
             nav.classList.add('nav-' + current);
+            if(nav.classList.contains('revealed') === false && document.readyState === 'complete'){
+                nav.classList.add('revealed');
+            }
         }
-
         window.addEventListener('scroll', updateNavColor, { passive: true });
         updateNavColor();
 
-        // ─── CONTACT FORM HANDLER ───
-        const form = document.getElementById('contact-form');
-        form.addEventListener('submit', async (e) => {
+        // Contact form
+        var form = document.getElementById('contact-form');
+        form.addEventListener('submit', function(e){
             e.preventDefault();
-            const btn = form.querySelector('.form-submit span');
+            var btn = form.querySelector('.form-submit span');
             btn.textContent = 'Sending...';
-
-            try {
-                const res = await fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form),
-                    headers: { 'Accept': 'application/json' }
-                });
-                if (res.ok) {
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+            }).then(function(res){
+                if(res.ok){
                     form.style.display = 'none';
                     document.getElementById('form-success').classList.add('show');
                 } else {
-                    btn.textContent = 'Error — try again';
-                    setTimeout(() => { btn.textContent = 'Send Message'; }, 2000);
+                    btn.textContent = 'Error - try again';
+                    setTimeout(function(){ btn.textContent = 'Send Message'; }, 2000);
                 }
-            } catch (err) {
-                btn.textContent = 'Error — try again';
-                setTimeout(() => { btn.textContent = 'Send Message'; }, 2000);
-            }
+            }).catch(function(){
+                btn.textContent = 'Error - try again';
+                setTimeout(function(){ btn.textContent = 'Send Message'; }, 2000);
+            });
         });
     </script>
 
