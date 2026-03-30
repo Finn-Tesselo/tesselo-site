@@ -203,7 +203,7 @@
         .work .section-label::after { background: #333; }
         .work-intro { max-width: 600px; font-family: var(--font-serif); font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 400; line-height: 1.4; margin-bottom: 5rem; letter-spacing: -0.01em; }
         .work-intro em { color: var(--accent); font-style: italic; }
-        .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
         .project-card {
             border: 1px solid #222; padding: 2.5rem; position: relative; overflow: hidden;
             min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end;
@@ -246,11 +246,11 @@
         .process { background: var(--white); position: relative; overflow: hidden; }
         /* Large background numeral watermark */
         .process-bg-text {
-            position: absolute; font-family: var(--font-serif); font-size: 40vw;
+            position: absolute; font-family: var(--font-serif); font-size: 38vw;
             font-weight: 400; color: var(--grey-light); opacity: 0.12; line-height: 1;
-            right: -5%; top: 50%; transform: translateY(-50%);
-            pointer-events: none; transition: content 0.5s; user-select: none;
-            letter-spacing: -0.05em;
+            right: 3rem; top: 50%; transform: translateY(-50%);
+            pointer-events: none; user-select: none;
+            letter-spacing: -0.05em; transition: opacity 0.3s ease;
         }
         .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 4rem; position: relative; z-index: 1; }
         /* Connected line above steps */
@@ -358,6 +358,7 @@
             .hero-scroll { display: none; }
             .services-grid { grid-template-columns: 1fr; }
             .project-grid { grid-template-columns: 1fr; }
+            .project-card { min-height: 240px; }
             .process-steps { grid-template-columns: 1fr; }
             .process-steps::before { display: none; }
             .process-step::before { display: none; }
@@ -535,6 +536,12 @@
                 <h4>Briefly</h4>
                 <p>An AI document summariser. Paste any text, get structured key points, action items, and a summary &#8212; with a streaming output effect.</p>
             </a>
+            <a href="/" class="project-card fade-in stagger-1">
+                <span class="project-placeholder">Live Demo</span>
+                <div class="project-tag">Website &#8212; Studio Homepage</div>
+                <h4>Tesselo V2</h4>
+                <p>The site you're on right now. Rebuilt from scratch with AI-assisted development &#8212; custom cursor, parallax tile mosaic, animated sections, and contact form.</p>
+            </a>
         </div>
     </section>
 
@@ -699,17 +706,13 @@
         function updateNavColor(){
             var scrollY = window.scrollY + 60;
             var current = 'light';
-            var isDark = false;
             sections.forEach(function(section){
-                if(section.offsetTop <= scrollY){
-                    current = section.dataset.nav;
-                    isDark = (current === 'light'); // "light" text = dark bg section
-                }
+                if(section.offsetTop <= scrollY){ current = section.dataset.nav; }
             });
             nav.className = nav.className.replace(/nav-light|nav-dark/g, '').trim();
             nav.classList.add('nav-' + current);
-            // Cursor colour
-            if(isDark){
+            // data-nav="light" = white nav text = dark background = white cursor
+            if(current === 'light'){
                 document.body.classList.add('cursor-dark');
             } else {
                 document.body.classList.remove('cursor-dark');
