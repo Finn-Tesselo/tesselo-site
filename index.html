@@ -540,6 +540,35 @@
                 setTimeout(function(){ btn.textContent = 'Send Message'; }, 2000);
             });
         });
+
+        // Living mosaic flicker
+        (function(){
+            var tiles = document.querySelectorAll('.hero-bg-tiles .bg-tile');
+            if (!tiles.length) return;
+
+            function flickerTile() {
+                var tile = tiles[Math.floor(Math.random() * tiles.length)];
+                var baseOp = parseFloat(getComputedStyle(tile).opacity) || 0.1;
+                var boost = baseOp + (Math.random() * 0.15) + 0.05;
+                tile.style.transition = 'opacity 0.8s ease';
+                tile.style.opacity = Math.min(boost, 0.45);
+                setTimeout(function(){
+                    tile.style.transition = 'opacity 1.2s ease';
+                    tile.style.opacity = '';
+                }, 800 + Math.random() * 400);
+            }
+
+            // Start flickering after initial tile animations complete
+            setTimeout(function(){
+                setInterval(function(){
+                    flickerTile();
+                    // Occasionally flicker 2 tiles at once
+                    if (Math.random() > 0.6) {
+                        setTimeout(flickerTile, 150);
+                    }
+                }, 600 + Math.random() * 800);
+            }, 2000);
+        })();
     </script>
 
 </body>
