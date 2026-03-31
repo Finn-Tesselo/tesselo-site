@@ -412,58 +412,136 @@ nav.scrolled{
 /* ═══════════════════════════════
    ABOUT PAGE
 ═══════════════════════════════ */
+/* ═══ ABOUT — full rebuild ═══ */
 #page-about{background:var(--bg);}
+
 .about-hero{
-  padding:8rem 3rem 5rem;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:5rem;align-items:start;
-  min-height:70vh;
+  min-height:100vh;padding:8rem 3rem 5rem;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border);
 }
-.about-left{}
 .about-eyebrow{
   font-size:0.65rem;text-transform:uppercase;letter-spacing:0.22em;
-  color:var(--accent);margin-bottom:1.5rem;
+  color:var(--accent);margin-bottom:2rem;
   display:flex;align-items:center;gap:12px;
 }
 .about-eyebrow::before{content:'';width:28px;height:1px;background:var(--accent);}
 .about-h1{
-  font-family:var(--serif);font-size:clamp(2.5rem,5vw,4rem);
-  font-weight:400;letter-spacing:-0.04em;line-height:1.05;
-  margin-bottom:2rem;
-}
-.about-h1 em{font-style:italic;color:var(--accent);}
-.about-intro{color:var(--muted);font-size:1rem;line-height:1.8;margin-bottom:1.5rem;}
-.about-story{
-  color:var(--muted);font-size:0.9rem;line-height:1.8;
-  padding-top:1.5rem;border-top:1px solid var(--border);
-}
-
-.about-right{padding-top:1rem;}
-.about-tile-art{
-  position:relative;width:100%;padding-bottom:90%;
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(4rem,9vw,8.5rem);
+  line-height:0.92;letter-spacing:-0.04em;
   margin-bottom:3rem;
 }
-.at-tile{
-  position:absolute;border-radius:6px;
-  opacity:0;animation:tileIn 0.6s var(--ease) forwards;
+.about-h1 em{font-style:italic;color:var(--accent);}
+.about-hero-bottom{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:end;
+}
+.about-intro{
+  font-size:1.05rem;color:var(--muted);line-height:1.8;
+}
+.about-intro strong{color:var(--cream);font-weight:400;}
+.about-hero-meta{
+  display:flex;flex-direction:column;gap:1rem;align-items:flex-end;
+}
+.about-tag{
+  font-size:0.7rem;text-transform:uppercase;letter-spacing:0.14em;
+  color:var(--muted);padding:0.5rem 1rem;
+  border:1px solid var(--border);border-radius:4px;
 }
 
-.differentiators{margin-bottom:3rem;}
+/* scroll hint */
+.scroll-hint{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  opacity:0;animation:fadeUp 0.8s var(--ease) 1.4s forwards;
+}
+.scroll-hint span{
+  font-size:0.6rem;text-transform:uppercase;letter-spacing:0.2em;
+  color:var(--dim);
+}
+.scroll-line{
+  width:1px;height:40px;background:var(--dim);position:relative;overflow:hidden;
+}
+.scroll-line::after{
+  content:'';position:absolute;top:-100%;left:0;
+  width:100%;height:100%;background:var(--accent);
+  animation:scrollDrop 1.8s ease infinite;
+}
+@keyframes scrollDrop{
+  0%{top:-100%;}100%{top:200%;}
+}
+
+/* statement section */
+.about-statement{
+  padding:7rem 3rem;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.statement-quote{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(1.8rem,3.5vw,3rem);
+  line-height:1.2;letter-spacing:-0.02em;
+  color:var(--cream);max-width:900px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.9s var(--ease),transform 0.9s var(--ease);
+}
+.statement-quote.visible{opacity:1;transform:translateY(0);}
+.statement-quote em{font-style:italic;color:var(--accent);}
+.statement-attr{
+  margin-top:2.5rem;font-size:0.72rem;text-transform:uppercase;
+  letter-spacing:0.18em;color:var(--dim);
+  display:flex;align-items:center;gap:1rem;
+  opacity:0;transition:opacity 0.7s ease 0.3s;
+}
+.statement-attr.visible{opacity:1;}
+.statement-attr::before{content:'';width:28px;height:1px;background:var(--dim);}
+.statement-bg-num{
+  position:absolute;right:-0.05em;top:50%;transform:translateY(-50%);
+  font-family:var(--serif);font-size:clamp(12rem,22vw,20rem);
+  color:rgba(255,255,255,0.018);line-height:1;pointer-events:none;
+  user-select:none;letter-spacing:-0.06em;
+}
+
+/* differentiators */
+.diff-section{
+  border-bottom:1px solid var(--border);
+}
 .diff-item{
-  padding:1.5rem 0;border-bottom:1px solid var(--border);
-  opacity:0;transform:translateX(20px);
-  transition:opacity 0.6s var(--ease),transform 0.6s var(--ease);
+  display:grid;grid-template-columns:80px 1fr 1fr;
+  gap:2rem;align-items:center;
+  padding:2.75rem 3rem;border-top:1px solid var(--border);
+  cursor:default;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.6s var(--ease),transform 0.6s var(--ease),background 0.3s ease;
 }
-.diff-item.visible{opacity:1;transform:translateX(0);}
-.diff-item:last-child{border-bottom:none;}
-.diff-num{font-family:var(--serif);font-size:0.8rem;color:var(--accent);margin-bottom:0.5rem;}
+.diff-item:hover{background:var(--bg-2);}
+.diff-item.visible{opacity:1;transform:translateY(0);}
+.diff-num{
+  font-family:var(--serif);font-size:3rem;
+  color:var(--dim);line-height:1;
+  transition:color 0.3s ease;
+}
+.diff-item:hover .diff-num{color:var(--accent);}
 .diff-item h4{
-  font-family:var(--serif);font-size:1.3rem;font-weight:400;
-  margin-bottom:0.4rem;
+  font-family:var(--serif);font-size:1.6rem;font-weight:400;
+  letter-spacing:-0.02em;
 }
-.diff-item p{font-size:0.83rem;color:var(--muted);line-height:1.6;}
+.diff-item p{font-size:0.87rem;color:var(--muted);line-height:1.7;}
 
-.skills-section{padding:5rem 3rem;background:var(--bg-2);border-top:1px solid var(--border);}
+/* skills */
+.skills-section{padding:6rem 3rem;background:var(--bg);border-top:1px solid var(--border);}
+.skills-intro{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;margin-bottom:4rem;align-items:end;
+}
+.skills-intro h3{
+  font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.5rem);
+  font-weight:400;letter-spacing:-0.03em;line-height:1.1;
+}
+.skills-intro h3 em{font-style:italic;color:var(--accent);}
+.skills-intro p{font-size:0.88rem;color:var(--muted);line-height:1.75;}
 .skills-grid{
   display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0;
 }
@@ -606,7 +684,13 @@ footer a:hover{color:var(--cream);}
   .proc-step{border-left:none;border-top:1px solid var(--border);padding:2rem 0;}
   .proc-step:first-child{border-top:none;}
   .cta-strip{flex-direction:column;align-items:flex-start;}
-  .work-header,.about-hero,.contact-wrap{padding:6rem 1.5rem 3rem;}
+  .about-hero{padding:6rem 1.5rem 4rem;}
+  .about-hero-bottom{grid-template-columns:1fr;}
+  .about-hero-meta{align-items:flex-start;}
+  .diff-item{grid-template-columns:50px 1fr;gap:1.25rem;padding:2rem 1.5rem;}
+  .diff-item p{display:none;}
+  .skills-section{padding:3.5rem 1.5rem;}
+  .skills-intro{grid-template-columns:1fr;gap:1.5rem;}
   .work-filters{padding:1.25rem 1.5rem;top:64px;}
   .work-grid{grid-template-columns:1fr;background:none;gap:1px;}
   .skills-section{padding:3.5rem 1.5rem;}
@@ -832,37 +916,67 @@ footer a:hover{color:var(--cream);}
 
 <!-- ═══════ ABOUT ═══════ -->
 <div class="page" id="page-about">
-  <div class="about-hero">
-    <div class="about-left">
-      <div class="about-eyebrow">About Tesselo</div>
-      <h1 class="about-h1">Building the<br>future, <em>fast.</em></h1>
-      <p class="about-intro">I'm Finn — a developer and problem solver based in the UK. Tesselo is my AI-assisted development studio, built on a simple premise: the best ideas deserve to exist, and they deserve to exist quickly.</p>
-      <p class="about-story">Traditional development is slow, expensive, and bloated with process. AI-assisted development changes that. I use cutting-edge tools to compress weeks of work into days — without cutting corners on quality, design, or ownership. Whether you're a founder who needs an MVP, a small business who needs a professional web presence, or a company that needs a custom internal tool — Tesselo builds it, ships it, and hands it over to you. No lock-in. No ongoing dependency. Just great work, fast.</p>
-    </div>
-    <div class="about-right">
-      <div class="about-tile-art" id="about-tiles"></div>
-      <div class="differentiators">
-        <div class="diff-item">
-          <div class="diff-num">01</div>
-          <h4>Speed without compromise</h4>
-          <p>AI-assisted development compresses timelines without cutting corners. You get the same quality — delivered in a fraction of the time.</p>
-        </div>
-        <div class="diff-item">
-          <div class="diff-num">02</div>
-          <h4>You own everything</h4>
-          <p>No subscriptions, no lock-in, no dependency on Tesselo to keep things running. Every line of code is yours from day one.</p>
-        </div>
-        <div class="diff-item">
-          <div class="diff-num">03</div>
-          <h4>No fluff. Just build.</h4>
-          <p>No discovery workshops that last a month. No 40-slide decks before anything gets made. We talk, we build, we iterate.</p>
-        </div>
+
+  <!-- HERO -->
+  <section class="about-hero">
+    <div class="grid-texture"></div>
+    <div class="about-eyebrow">The person behind Tesselo</div>
+    <h1 class="about-h1">I'm Finn.<br>I build things<br>that <em>actually work.</em></h1>
+    <div class="about-hero-bottom">
+      <p class="about-intro">
+        <strong>Developer, problem solver, one-person studio.</strong> Based in the UK, I use AI-assisted development to do what used to take teams — websites, apps, tools, automations — delivered fast, built properly, handed over to you.
+      </p>
+      <div class="about-hero-meta">
+        <span class="about-tag">Based in the UK</span>
+        <span class="about-tag">AI-Assisted Development</span>
+        <span class="about-tag">Available now</span>
       </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="about-statement">
+    <div class="statement-bg-num">T</div>
+    <p class="statement-quote fade-up">
+      Traditional development is <em>slow, expensive, and bloated with process.</em> I built Tesselo to change that — to prove that one person with the right tools can outbuild a team, outpace an agency, and hand you something genuinely yours.
+    </p>
+    <div class="statement-attr fade-up">Finn — Founder, Tesselo</div>
+  </section>
+
+  <!-- DIFFERENTIATORS -->
+  <div class="diff-section">
+    <div class="diff-item">
+      <div class="diff-num">01</div>
+      <h4>Speed without compromise</h4>
+      <p>AI-assisted development compresses timelines without cutting corners. You get the same quality — in a fraction of the time a traditional agency would quote you for.</p>
+    </div>
+    <div class="diff-item">
+      <div class="diff-num">02</div>
+      <h4>You own everything</h4>
+      <p>No subscriptions, no lock-in, no dependency on Tesselo to keep the lights on. Every line of code, every file, every asset — yours from day one.</p>
+    </div>
+    <div class="diff-item">
+      <div class="diff-num">03</div>
+      <h4>No fluff. Just build.</h4>
+      <p>No discovery workshops that last a month. No 40-slide decks before anything gets made. We talk, I build, you review. Tight, fast, honest.</p>
+    </div>
+    <div class="diff-item">
+      <div class="diff-num">04</div>
+      <h4>Genuinely unlimited scope</h4>
+      <p>If it can be done on a screen, I can build it. Websites, web apps, internal tools, AI-powered solutions, dashboards, documents — the brief sets the limit, not my toolkit.</p>
     </div>
   </div>
 
+  <!-- SKILLS -->
   <section class="skills-section">
-    <div class="section-label" style="margin-bottom:2rem;">Tools &amp; technologies</div>
+    <div class="skills-intro">
+      <h3>Built with the<br>best <em>tools available.</em></h3>
+      <p>I don't pick tools for familiarity — I pick them for results. The stack changes with the brief, but the output is always production-grade.</p>
+    </div>
     <div class="skills-grid" id="skills-grid">
       <span class="skill-pill">HTML / CSS / JS</span>
       <span class="skill-pill">AI-Assisted Development</span>
@@ -872,17 +986,18 @@ footer a:hover{color:var(--cream);}
       <span class="skill-pill">SPA Architecture</span>
       <span class="skill-pill">GitHub Pages</span>
       <span class="skill-pill">Formspree</span>
-      <span class="skill-pill">Google Fonts</span>
-      <span class="skill-pill">Canva</span>
-      <span class="skill-pill">UI/UX Design</span>
+      <span class="skill-pill">UI / UX Design</span>
       <span class="skill-pill">Web Performance</span>
       <span class="skill-pill">SEO Fundamentals</span>
       <span class="skill-pill">Drag &amp; Drop UI</span>
       <span class="skill-pill">Data Visualisation</span>
       <span class="skill-pill">API Integrations</span>
+      <span class="skill-pill">Canva</span>
+      <span class="skill-pill">Google Fonts</span>
     </div>
-    <div style="margin-top:3rem;">
+    <div style="margin-top:3.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
       <a href="#contact" class="btn-primary" data-tab="contact">Work with me &nbsp;→</a>
+      <a href="#work" class="btn-ghost" data-tab="work"><span>See the work &nbsp;→</span></a>
     </div>
   </section>
 
@@ -1106,7 +1221,7 @@ var scrollObs=new IntersectionObserver(function(entries){
 },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
 
 function triggerScrollAnimations(container){
-  container.querySelectorAll('.fade-up,.section-label,.svc-card,.proc-step,.stat-item,.diff-item,.skill-pill').forEach(function(el){
+  container.querySelectorAll('.fade-up,.section-label,.svc-card,.proc-step,.stat-item,.diff-item,.skill-pill,.statement-quote,.statement-attr').forEach(function(el){
     // re-observe
     scrollObs.unobserve(el);
     scrollObs.observe(el);
@@ -1140,7 +1255,7 @@ function triggerScrollAnimations(container){
   // page-level scroll listener
   container.removeEventListener('scroll',container._scrollHandler||function(){});
   container._scrollHandler=function(){
-    container.querySelectorAll('.fade-up,.section-label,.svc-card,.proc-step,.stat-item,.diff-item,.skill-pill').forEach(function(el){
+    container.querySelectorAll('.fade-up,.section-label,.svc-card,.proc-step,.stat-item,.diff-item,.skill-pill,.statement-quote,.statement-attr').forEach(function(el){
       var rect=el.getBoundingClientRect();
       if(rect.top<window.innerHeight*0.9&&rect.bottom>0)el.classList.add('visible');
     });
