@@ -1,719 +1,1285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesselo &#8212; AI-Assisted Development Studio</title>
-    <meta name="description" content="Tesselo builds websites, web apps, dashboards, internal tools, documents, and AI-powered solutions at speed. You describe it, we build it.">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='2' y='2' width='28' height='28' rx='5' fill='%23c4431a'/><rect x='34' y='34' width='28' height='28' rx='5' fill='%230a0a0a'/></svg>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --black: #0a0a0a;
-            --white: #f5f2ee;
-            --grey: #8a8680;
-            --grey-light: #d4d0cb;
-            --accent: #c4431a;
-            --font-serif: 'Instrument Serif', Georgia, serif;
-            --font-sans: 'DM Sans', -apple-system, sans-serif;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        ::selection { background: var(--accent); color: var(--white); }
-        html { scroll-behavior: smooth; font-size: 16px; }
-        body {
-            background: var(--white); color: var(--black);
-            font-family: var(--font-sans); font-weight: 300;
-            line-height: 1.6; -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tesselo — AI-Assisted Development Studio</title>
+<meta name="description" content="Tesselo builds websites, web apps, dashboards, internal tools, and AI-powered solutions at speed. You describe it, we build it.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='2' y='2' width='28' height='28' rx='5' fill='%23c4431a'/><rect x='34' y='34' width='28' height='28' rx='5' fill='%23f0ede8'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0a0a0f;
+  --bg-2:     #111118;
+  --bg-3:     #1a1a24;
+  --bg-4:     #222230;
+  --accent:   #c4431a;
+  --accent-d: #a33614;
+  --cream:    #f0ede8;
+  --muted:    #8a8680;
+  --dim:      #3a3a46;
+  --border:   rgba(255,255,255,0.06);
+  --border-h: rgba(255,255,255,0.14);
+  --serif:    'Instrument Serif', Georgia, serif;
+  --sans:     'DM Sans', -apple-system, sans-serif;
+  --ease:     cubic-bezier(0.22,1,0.36,1);
+}
 
-        /* NAV */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 1.25rem 3rem;
-            display: flex; justify-content: space-between; align-items: center;
-            opacity: 0; transform: translateY(-20px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        nav.revealed { opacity: 1; transform: translateY(0); }
-        nav .logo {
-            display: flex; align-items: center; gap: 0.75rem;
-            text-decoration: none; position: relative; z-index: 101;
-        }
-        .logo-mark { display: flex; position: relative; width: 32px; height: 32px; }
-        .logo-mark .tile { position: absolute; width: 15px; height: 15px; border-radius: 3px; }
-        .logo-mark .tile-accent { background: var(--accent); top: 0; left: 0; }
-        .logo-mark .tile-dark { top: 17px; left: 17px; }
-        nav.nav-light .logo-text { color: var(--white); }
-        nav.nav-light .nav-links a { color: var(--white); }
-        nav.nav-light .nav-links a::after { background: var(--white); }
-        nav.nav-light .tile-dark { background: var(--white); }
-        nav.nav-dark .logo-text { color: var(--black); }
-        nav.nav-dark .nav-links a { color: var(--black); }
-        nav.nav-dark .nav-links a::after { background: var(--black); }
-        nav.nav-dark .tile-dark { background: var(--black); }
-        .logo-text { font-family: var(--font-serif); font-size: 1.5rem; letter-spacing: 0.02em; transition: color 0.4s ease; }
-        nav .nav-links { display: flex; gap: 2.5rem; list-style: none; position: relative; z-index: 101; }
-        nav .nav-links a {
-            font-size: 0.8rem; font-weight: 400; text-decoration: none; text-transform: uppercase;
-            letter-spacing: 0.12em; transition: opacity 0.3s, color 0.4s ease; position: relative; cursor: pointer;
-        }
-        nav .nav-links a::after {
-            content: ''; position: absolute; bottom: -4px; left: 0;
-            width: 0; height: 1px; transition: width 0.3s ease, background 0.4s ease;
-        }
-        nav .nav-links a:hover::after { width: 100%; }
-        nav .nav-links a:hover { opacity: 0.7; }
+*{margin:0;padding:0;box-sizing:border-box;}
+::selection{background:var(--accent);color:var(--cream);}
+html{font-size:16px;scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--cream);
+  font-family:var(--sans);font-weight:300;
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;cursor:none;
+}
+a{color:inherit;text-decoration:none;}
 
-        /* HERO */
-        .hero {
-            min-height: 100vh; display: flex; flex-direction: column;
-            justify-content: flex-end; padding: 3rem; padding-bottom: 6rem;
-            position: relative; background: var(--black); color: var(--white); overflow: hidden;
-        }
-        .hero-bg-tiles { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; overflow: hidden; }
-        .hero-bg-tiles .bg-tile {
-            position: absolute; border-radius: 5px;
-            opacity: 0; animation: tileAppear 0.6s ease forwards;
-        }
-        @keyframes tileAppear {
-            from { opacity: 0; transform: scale(0.7) rotate(-5deg); }
-            to { opacity: var(--tile-op, 0.12); transform: scale(1) rotate(var(--tile-rot, 0deg)); }
-        }
-        .hero-content { position: relative; z-index: 1; }
-        .hero h1 {
-            font-family: var(--font-serif); font-weight: 400;
-            font-size: clamp(3.5rem, 9vw, 8rem); line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 3rem;
-        }
-        .hero h1 .line-1 { display: inline-block; opacity: 0; transform: translateY(40px); animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards; }
-        .hero h1 .line-2 { display: inline-block; margin-left: 15%; color: var(--accent); opacity: 0; transform: translateY(40px); animation: heroReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards; }
-        @keyframes heroReveal { to { opacity: 1; transform: translateY(0); } }
-        .hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; opacity: 0; transform: translateY(15px); animation: fadeUp 0.8s ease 1s forwards; }
-        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-        .hero-sub { max-width: 420px; color: var(--grey); font-size: 1rem; line-height: 1.7; }
-        .hero-tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: #444; white-space: nowrap; }
+/* ── CURSOR ── */
+#cursor{
+  position:fixed;width:10px;height:10px;
+  background:var(--accent);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width 0.25s var(--ease),height 0.25s var(--ease),background 0.25s ease,opacity 0.3s ease;
+  mix-blend-mode:normal;
+}
+#cursor.hover{width:36px;height:36px;background:rgba(196,67,26,0.15);border:1px solid var(--accent);}
+#cursor.click{width:6px;height:6px;}
+@media(pointer:coarse){#cursor{display:none;}body{cursor:auto;}}
 
-        /* SECTIONS */
-        section { padding: 8rem 3rem; }
-        .section-label {
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em;
-            color: var(--grey); margin-bottom: 3rem; display: flex; align-items: center; gap: 1.5rem;
-        }
-        .section-label::after {
-            content: ''; flex: 1; height: 1px; background: var(--grey-light);
-            transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .section-label.visible::after { transform: scaleX(1); }
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.25rem 3rem;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background 0.4s ease,backdrop-filter 0.4s ease,border-color 0.4s ease;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{
+  background:rgba(10,10,15,0.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom-color:var(--border);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:0.75rem;
+  text-decoration:none;cursor:none;
+}
+.logo-mark{position:relative;width:28px;height:28px;flex-shrink:0;}
+.logo-mark .t1{position:absolute;top:0;left:0;width:13px;height:13px;border-radius:3px;background:var(--accent);}
+.logo-mark .t2{position:absolute;bottom:0;right:0;width:13px;height:13px;border-radius:3px;background:var(--cream);}
+.logo-text{font-family:var(--serif);font-size:1.4rem;letter-spacing:0.02em;color:var(--cream);}
 
-        /* SERVICES */
-        .services { background: var(--white); }
-        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--grey-light); margin-top: 2rem; }
-        .service-card { background: var(--white); padding: 3rem 2.5rem; transition: background 0.5s ease, color 0.5s ease, transform 0.3s ease; cursor: default; position: relative; }
-        .service-card:hover { background: var(--black); color: var(--white); transform: scale(1.02); z-index: 2; }
-        .service-card:hover .service-num { color: var(--accent); }
-        .service-num { font-family: var(--font-serif); font-size: 3rem; color: var(--grey-light); transition: color 0.5s ease; margin-bottom: 2rem; }
-        .service-card h3 { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 400; margin-bottom: 1rem; letter-spacing: -0.01em; }
-        .service-card p { font-size: 0.9rem; line-height: 1.7; color: var(--grey); transition: color 0.5s ease; }
-        .service-card:hover p { color: var(--grey-light); }
+.nav-tabs{
+  display:flex;align-items:center;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:10px;padding:4px;gap:2px;
+}
+.nav-tab{
+  font-family:var(--sans);font-size:0.72rem;font-weight:500;
+  color:rgba(255,255,255,0.4);padding:0.45rem 1.1rem;
+  border-radius:7px;cursor:none;
+  transition:color 0.25s ease,background 0.25s ease;
+  letter-spacing:0.04em;border:none;background:transparent;
+}
+.nav-tab:hover{color:rgba(255,255,255,0.75);}
+.nav-tab.active{
+  background:rgba(255,255,255,0.1);
+  color:var(--cream);
+}
 
-        /* WORK */
-        .work { background: var(--black); color: var(--white); }
-        .work .section-label { color: var(--grey); }
-        .work .section-label::after { background: #333; }
-        .work-intro { max-width: 600px; font-family: var(--font-serif); font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 400; line-height: 1.4; margin-bottom: 5rem; letter-spacing: -0.01em; }
-        .work-intro em { color: var(--accent); font-style: italic; }
-        .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-        .project-card { border: 1px solid #222; padding: 2.5rem; position: relative; overflow: hidden; min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end; transition: border-color 0.4s, transform 0.3s ease, box-shadow 0.4s ease; }
-        .project-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(196, 67, 26, 0.1); }
-        .project-tag { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--grey); margin-bottom: 1rem; }
-        .project-card h4 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin-bottom: 0.75rem; }
-        .project-card p { font-size: 0.85rem; color: var(--grey); line-height: 1.6; }
-        .project-placeholder { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: #333; border: 1px solid #333; padding: 0.3rem 0.7rem; transition: all 0.3s; }
-        .project-card:hover .project-placeholder { border-color: var(--accent); color: var(--accent); }
+/* ── PAGE SYSTEM ── */
+.page{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  overflow-y:auto;overflow-x:hidden;
+  opacity:0;pointer-events:none;
+  transform:translateY(24px);
+  transition:opacity 0.35s var(--ease),transform 0.35s var(--ease);
+  will-change:opacity,transform;
+}
+.page.active{
+  opacity:1;pointer-events:all;
+  transform:translateY(0);
+}
+.page.exit{
+  opacity:0;transform:translateY(-18px);
+  pointer-events:none;
+}
 
-        /* PROCESS */
-        .process { background: var(--white); position: relative; overflow: hidden; }
-        .process-bg-glyph {
-            position: absolute; font-family: var(--font-serif); font-size: 38vw;
-            font-weight: 400; font-style: italic; color: var(--grey-light);
-            opacity: 0.18; line-height: 1; right: 3rem; top: 50%;
-            transform: translateY(-50%); pointer-events: none; user-select: none;
-            letter-spacing: -0.05em; transition: opacity 0.4s ease;
-        }
-        .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 2rem; position: relative; z-index: 1; }
-        .process-step { padding: 2.5rem 2rem; border-left: 1px solid var(--grey-light); transition: background 0.4s ease; position: relative; cursor: default; }
-        .process-step:first-child { border-left: none; padding-left: 0; }
-        .process-step:hover { background: rgba(196, 67, 26, 0.03); }
-        .step-num { font-family: var(--font-serif); font-size: 0.9rem; color: var(--accent); margin-bottom: 1.5rem; display: inline-block; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), letter-spacing 0.4s ease; }
-        .process-step:hover .step-num { transform: translateX(6px); letter-spacing: 0.05em; }
-        .process-step h4 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400; margin-bottom: 0.75rem; }
-        .process-step p { font-size: 0.85rem; color: var(--grey); line-height: 1.65; }
-        @media (max-width: 900px) { .process-bg-glyph { display: none; } }
+/* ── GRID TEXTURE ── */
+.grid-texture{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:44px 44px;
+}
 
-        /* CONTACT */
-        .contact { background: var(--black); color: var(--white); padding: 8rem 3rem; }
-        .contact-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-        .contact-text h2 { font-family: var(--font-serif); font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 400; letter-spacing: -0.03em; margin-bottom: 1.25rem; line-height: 1.05; }
-        .contact-text h2 em { font-style: italic; color: var(--accent); }
-        .contact-text > p { color: var(--grey); font-size: 0.95rem; line-height: 1.7; margin-bottom: 2rem; }
-        .contact-direct { font-size: 0.8rem; color: var(--grey); }
-        .contact-direct a { color: var(--white); text-decoration: none; transition: color 0.3s; }
-        .contact-direct a:hover { color: var(--accent); }
-        .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .contact-form label { display: block; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--grey); margin-bottom: 0.4rem; }
-        .contact-form input, .contact-form textarea { width: 100%; padding: 0.8rem 1rem; background: #1a1a1e; border: 1px solid #2a2a30; border-radius: 6px; color: var(--white); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 300; outline: none; transition: border-color 0.3s ease; }
-        .contact-form input::placeholder, .contact-form textarea::placeholder { color: #4a4a52; }
-        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); }
-        .contact-form textarea { resize: vertical; min-height: 100px; }
-        .form-submit { display: inline-block; font-family: var(--font-sans); font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--white); padding: 1rem 2.5rem; border: 1px solid #444; background: transparent; cursor: pointer; transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); position: relative; overflow: hidden; border-radius: 0; align-self: flex-start; }
-        .form-submit::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: var(--accent); transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1); z-index: 0; }
-        .form-submit:hover::before { left: 0; }
-        .form-submit:hover { border-color: var(--accent); }
-        .form-submit span { position: relative; z-index: 1; }
-        .form-success { display: none; text-align: center; padding: 3rem 1rem; }
-        .form-success.show { display: block; }
-        .form-success .check { width: 56px; height: 56px; border-radius: 50%; background: rgba(196, 67, 26, 0.15); margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; animation: scaleIn 0.5s ease; }
-        @keyframes scaleIn { 0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
-        .form-success h3 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin-bottom: 0.5rem; }
-        .form-success p { color: var(--grey); font-size: 0.9rem; }
+/* ═══════════════════════════════
+   HOME PAGE
+═══════════════════════════════ */
+#page-home{background:var(--bg);}
 
-        /* FOOTER */
-        footer { background: var(--black); color: var(--grey); padding: 2rem 3rem; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; letter-spacing: 0.05em; }
-        .footer-logo { display: flex; align-items: center; gap: 0.5rem; }
-        .footer-logo .tile { width: 8px; height: 8px; border-radius: 2px; }
-        footer a { color: var(--grey); text-decoration: none; transition: color 0.3s; }
-        footer a:hover { color: var(--white); }
+/* hero */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:2rem 3rem 5rem;
+  position:relative;overflow:hidden;
+}
+.hero-bg-tiles{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.bg-tile{
+  position:absolute;border-radius:5px;
+  opacity:0;animation:tileIn 0.6s var(--ease) forwards;
+}
+@keyframes tileIn{
+  from{opacity:0;transform:scale(0.6) rotate(-8deg);}
+  to{opacity:var(--op,0.15);transform:scale(1) rotate(var(--rot,0deg));}
+}
 
-        /* ANIMATIONS */
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-        .slide-in-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
-        .slide-in-left.visible { opacity: 1; transform: translateX(0); }
-        .char-reveal .char { display: inline-block; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
-        .char-reveal.visible .char { opacity: 1; transform: translateY(0); }
-        .char-reveal .space { display: inline-block; width: 0.3em; }
-        .stagger-1 { transition-delay: 0.1s; }
-        .stagger-2 { transition-delay: 0.2s; }
-        .stagger-3 { transition-delay: 0.3s; }
-        .stagger-4 { transition-delay: 0.4s; }
+.hero-content{position:relative;z-index:1;}
+.hero-eyebrow{
+  font-size:0.65rem;text-transform:uppercase;letter-spacing:0.22em;
+  color:var(--accent);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:12px;
+  opacity:0;animation:fadeUp 0.7s var(--ease) 0.4s forwards;
+}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--accent);}
 
-        /* CUSTOM CURSOR */
-        body { cursor: none; }
-        .cursor-dot {
-            position: fixed; top: 0; left: 0; z-index: 9999;
-            width: 8px; height: 8px; border-radius: 50%;
-            background: var(--accent); pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s ease, height 0.2s ease, opacity 0.3s ease;
-            will-change: transform;
-        }
-        .cursor-ring {
-            position: fixed; top: 0; left: 0; z-index: 9998;
-            width: 36px; height: 36px; border-radius: 50%;
-            border: 1px solid rgba(196, 67, 26, 0.5); pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.3s ease;
-            will-change: transform;
-        }
-        .cursor-dot.is-hovering { width: 12px; height: 12px; }
-        .cursor-ring.is-hovering { width: 52px; height: 52px; border-color: var(--accent); }
-        .cursor-dot.is-hidden, .cursor-ring.is-hidden { opacity: 0; }
-        @media (hover: none) {
-            body { cursor: auto; }
-            .cursor-dot, .cursor-ring { display: none; }
-        }
+.hero-h1{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(4rem,10vw,9rem);
+  line-height:0.92;letter-spacing:-0.04em;
+  margin-bottom:3.5rem;
+}
+.hero-word{
+  display:inline-block;
+  opacity:0;transform:translateY(50px);
+  animation:wordIn 0.9s var(--ease) forwards;
+}
+.hero-word.accent-block{
+  background:var(--accent);
+  color:var(--cream);
+  padding:0 0.12em 0.04em;
+  display:inline-block;
+}
+@keyframes wordIn{to{opacity:1;transform:translateY(0);}}
 
-        /* SCROLL INDICATOR */
-        .scroll-indicator {
-            position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-            opacity: 0; animation: fadeUp 0.8s ease 1.4s forwards;
-            z-index: 2;
-        }
-        .scroll-indicator span {
-            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.25em;
-            color: rgba(245,242,238,0.35); font-family: var(--font-sans); font-weight: 400;
-        }
-        .scroll-track {
-            width: 1px; height: 52px; background: rgba(245,242,238,0.12);
-            position: relative; overflow: hidden;
-        }
-        .scroll-thumb {
-            position: absolute; top: 0; left: 0; width: 100%;
-            background: var(--accent);
-            animation: scrollThumb 1.8s cubic-bezier(0.4, 0, 0.2, 1) 1.6s infinite;
-        }
-        @keyframes scrollThumb {
-            0%   { height: 0%;   top: 0%; opacity: 1; }
-            50%  { height: 60%;  top: 20%; opacity: 1; }
-            100% { height: 0%;   top: 100%; opacity: 0; }
-        }
+.hero-bottom{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;
+  opacity:0;animation:fadeUp 0.7s var(--ease) 1.2s forwards;
+}
+.hero-sub{
+  max-width:420px;color:var(--muted);font-size:1rem;line-height:1.75;
+}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-size:0.8rem;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--cream);padding:0.9rem 2.2rem;
+  border:1px solid var(--dim);cursor:none;
+  position:relative;overflow:hidden;transition:border-color 0.3s ease;white-space:nowrap;
+}
+.hero-cta::before{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;background:var(--accent);
+  transition:left 0.4s var(--ease);z-index:0;
+}
+.hero-cta:hover::before{left:0;}
+.hero-cta:hover{border-color:var(--accent);}
+.hero-cta span{position:relative;z-index:1;}
 
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            nav { padding: 1.25rem 1.5rem; }
-            nav .nav-links { gap: 1.5rem; }
-            nav .nav-links a { font-size: 0.7rem; }
-            section { padding: 5rem 1.5rem; }
-            .hero { padding: 1.5rem; padding-bottom: 4rem; }
-            .hero h1 { font-size: clamp(2.8rem, 12vw, 5rem); }
-            .hero h1 .line-2 { margin-left: 5%; }
-            .hero-bottom { flex-direction: column; align-items: flex-start; }
-            .hero-tag { display: none; }
-            .services-grid { grid-template-columns: 1fr; }
-            .project-grid { grid-template-columns: 1fr; }
-            .process-steps { grid-template-columns: 1fr; }
-            .process-step { border-left: none; border-top: 1px solid var(--grey-light); padding-left: 0; padding: 2rem 0; }
-            .process-step:first-child { border-top: none; }
-            .contact { padding: 5rem 1.5rem; }
-            .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-            .form-row { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 480px) {
-            nav .nav-links { display: none; }
-        }
-    </style>
+/* stats bar */
+.stats-bar{
+  background:var(--bg-2);border-top:1px solid var(--border);
+  padding:2.5rem 3rem;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;
+}
+.stat-item{
+  padding:0 2rem;border-left:1px solid var(--border);
+  opacity:0;transform:translateY(16px);
+  transition:opacity 0.6s var(--ease),transform 0.6s var(--ease);
+}
+.stat-item:first-child{border-left:none;padding-left:0;}
+.stat-item.visible{opacity:1;transform:translateY(0);}
+.stat-num{
+  font-family:var(--serif);font-size:2.75rem;
+  color:var(--cream);letter-spacing:-0.04em;line-height:1;
+  margin-bottom:0.3rem;
+}
+.stat-num .accent{color:var(--accent);}
+.stat-label{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;}
+
+/* services */
+.services-section{padding:7rem 3rem;background:var(--bg);}
+.section-label{
+  font-size:0.65rem;text-transform:uppercase;letter-spacing:0.22em;
+  color:var(--muted);margin-bottom:3rem;
+  display:flex;align-items:center;gap:1.5rem;
+}
+.section-label::after{
+  content:'';flex:1;height:1px;background:var(--dim);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 1.4s var(--ease);
+}
+.section-label.visible::after{transform:scaleX(1);}
+
+.services-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1px;background:var(--dim);
+}
+.svc-card{
+  background:var(--bg);padding:3rem 2.5rem;
+  cursor:none;position:relative;overflow:hidden;
+  transition:background 0.5s ease,color 0.5s ease;
+  opacity:0;transform:translateY(24px);
+  transition:background 0.5s ease,color 0.5s ease,opacity 0.6s var(--ease),transform 0.6s var(--ease);
+}
+.svc-card.visible{opacity:1;transform:translateY(0);}
+.svc-card:hover{background:var(--cream);color:var(--bg);}
+.svc-card:hover .svc-num{color:var(--accent);}
+.svc-card:hover .svc-desc{color:#555;}
+.svc-num{
+  font-family:var(--serif);font-size:2.5rem;
+  color:var(--dim);margin-bottom:1.75rem;
+  transition:color 0.4s ease;
+}
+.svc-card h3{
+  font-family:var(--serif);font-size:1.6rem;font-weight:400;
+  margin-bottom:0.75rem;letter-spacing:-0.01em;
+}
+.svc-desc{font-size:0.88rem;line-height:1.7;color:var(--muted);transition:color 0.4s ease;}
+
+/* process */
+.process-section{padding:7rem 3rem;background:var(--bg-2);}
+.process-steps{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;margin-top:0;
+}
+.proc-step{
+  padding:2.5rem 2rem;border-left:1px solid var(--border);
+  opacity:0;transform:translateX(-20px);
+  transition:opacity 0.6s var(--ease),transform 0.6s var(--ease),background 0.3s ease;
+}
+.proc-step:first-child{border-left:none;padding-left:0;}
+.proc-step.visible{opacity:1;transform:translateX(0);}
+.proc-step:hover{background:rgba(196,67,26,0.04);}
+.step-roman{
+  font-family:var(--serif);font-size:0.9rem;color:var(--accent);
+  margin-bottom:1.5rem;transition:transform 0.3s ease;
+}
+.proc-step:hover .step-roman{transform:translateX(5px);}
+.proc-step h4{
+  font-family:var(--serif);font-size:1.2rem;font-weight:400;
+  margin-bottom:0.6rem;
+}
+.proc-step p{font-size:0.82rem;color:var(--muted);line-height:1.65;}
+
+/* CTA strip */
+.cta-strip{
+  padding:7rem 3rem;background:var(--bg);
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--border);
+  gap:2rem;
+}
+.cta-strip h2{
+  font-family:var(--serif);font-size:clamp(2rem,4vw,3.25rem);
+  font-weight:400;letter-spacing:-0.03em;line-height:1.1;
+}
+.cta-strip h2 em{font-style:italic;color:var(--accent);}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--sans);font-size:0.82rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--cream);padding:1rem 2.5rem;
+  background:var(--accent);border:none;cursor:none;
+  transition:background 0.3s ease,transform 0.2s ease;
+  white-space:nowrap;
+}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-1px);}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-family:var(--sans);font-size:0.82rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--cream);padding:1rem 2.5rem;
+  background:transparent;border:1px solid var(--dim);cursor:none;
+  position:relative;overflow:hidden;
+  transition:border-color 0.3s ease;
+  white-space:nowrap;
+}
+.btn-ghost::before{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;background:var(--accent);
+  transition:left 0.4s var(--ease);z-index:0;
+}
+.btn-ghost:hover::before{left:0;}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-ghost span{position:relative;z-index:1;}
+
+/* ═══════════════════════════════
+   WORK PAGE
+═══════════════════════════════ */
+#page-work{background:var(--bg);}
+.work-header{
+  padding:8rem 3rem 3rem;
+  border-bottom:1px solid var(--border);
+}
+.work-header h1{
+  font-family:var(--serif);font-size:clamp(2.5rem,5vw,4rem);
+  font-weight:400;letter-spacing:-0.04em;
+  line-height:1;margin-bottom:1rem;
+}
+.work-header h1 em{font-style:italic;color:var(--accent);}
+.work-header p{color:var(--muted);font-size:1rem;max-width:500px;line-height:1.7;}
+
+.work-filters{
+  display:flex;gap:0.5rem;padding:1.75rem 3rem;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:72px;z-index:10;
+  background:rgba(10,10,15,0.9);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+.filter-btn{
+  font-family:var(--sans);font-size:0.72rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.1em;
+  padding:0.5rem 1.25rem;border-radius:6px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--muted);cursor:none;
+  transition:all 0.25s ease;
+}
+.filter-btn:hover{border-color:var(--border-h);color:var(--cream);}
+.filter-btn.active{
+  background:var(--accent);border-color:var(--accent);
+  color:var(--cream);
+}
+
+.work-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1px;background:var(--border);
+  padding:0;
+}
+.project-card{
+  background:var(--bg);padding:2.75rem;
+  cursor:none;position:relative;
+  transition:background 0.35s ease,transform 0.25s ease;
+  opacity:0;transform:scale(0.96);
+  animation:cardIn 0.5s var(--ease) forwards;
+  display:flex;flex-direction:column;
+  min-height:320px;
+}
+.project-card.hiding{
+  animation:cardOut 0.25s var(--ease) forwards;
+}
+@keyframes cardIn{to{opacity:1;transform:scale(1);}}
+@keyframes cardOut{to{opacity:0;transform:scale(0.94);}}
+.project-card:hover{background:var(--bg-3);}
+.project-card:hover .proj-link{color:var(--accent);gap:0.6rem;}
+.proj-tag{
+  font-size:0.62rem;text-transform:uppercase;letter-spacing:0.16em;
+  color:var(--accent);margin-bottom:1rem;
+  display:flex;align-items:center;gap:8px;
+}
+.proj-tag-type{
+  font-size:0.6rem;padding:0.2rem 0.6rem;
+  border:1px solid var(--dim);border-radius:4px;
+  color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;
+}
+.project-card h3{
+  font-family:var(--serif);font-size:2rem;font-weight:400;
+  letter-spacing:-0.02em;margin-bottom:0.75rem;line-height:1.1;
+}
+.project-card p{
+  font-size:0.85rem;color:var(--muted);line-height:1.7;
+  margin-bottom:1.5rem;flex:1;
+}
+.proj-tech{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.75rem;}
+.tech-tag{
+  font-size:0.62rem;padding:0.25rem 0.65rem;
+  border:1px solid var(--dim);border-radius:4px;
+  color:var(--dim);text-transform:uppercase;letter-spacing:0.08em;
+  transition:border-color 0.2s,color 0.2s;
+}
+.project-card:hover .tech-tag{border-color:rgba(255,255,255,0.12);color:var(--muted);}
+.proj-link{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-size:0.75rem;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;
+  color:var(--muted);transition:color 0.25s ease,gap 0.25s ease;cursor:none;
+}
+
+/* ═══════════════════════════════
+   ABOUT PAGE
+═══════════════════════════════ */
+#page-about{background:var(--bg);}
+.about-hero{
+  padding:8rem 3rem 5rem;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:start;
+  min-height:70vh;
+}
+.about-left{}
+.about-eyebrow{
+  font-size:0.65rem;text-transform:uppercase;letter-spacing:0.22em;
+  color:var(--accent);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:12px;
+}
+.about-eyebrow::before{content:'';width:28px;height:1px;background:var(--accent);}
+.about-h1{
+  font-family:var(--serif);font-size:clamp(2.5rem,5vw,4rem);
+  font-weight:400;letter-spacing:-0.04em;line-height:1.05;
+  margin-bottom:2rem;
+}
+.about-h1 em{font-style:italic;color:var(--accent);}
+.about-intro{color:var(--muted);font-size:1rem;line-height:1.8;margin-bottom:1.5rem;}
+.about-story{
+  color:var(--muted);font-size:0.9rem;line-height:1.8;
+  padding-top:1.5rem;border-top:1px solid var(--border);
+}
+
+.about-right{padding-top:1rem;}
+.about-tile-art{
+  position:relative;width:100%;padding-bottom:90%;
+  margin-bottom:3rem;
+}
+.at-tile{
+  position:absolute;border-radius:6px;
+  opacity:0;animation:tileIn 0.6s var(--ease) forwards;
+}
+
+.differentiators{margin-bottom:3rem;}
+.diff-item{
+  padding:1.5rem 0;border-bottom:1px solid var(--border);
+  opacity:0;transform:translateX(20px);
+  transition:opacity 0.6s var(--ease),transform 0.6s var(--ease);
+}
+.diff-item.visible{opacity:1;transform:translateX(0);}
+.diff-item:last-child{border-bottom:none;}
+.diff-num{font-family:var(--serif);font-size:0.8rem;color:var(--accent);margin-bottom:0.5rem;}
+.diff-item h4{
+  font-family:var(--serif);font-size:1.3rem;font-weight:400;
+  margin-bottom:0.4rem;
+}
+.diff-item p{font-size:0.83rem;color:var(--muted);line-height:1.6;}
+
+.skills-section{padding:5rem 3rem;background:var(--bg-2);border-top:1px solid var(--border);}
+.skills-grid{
+  display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0;
+}
+.skill-pill{
+  font-size:0.75rem;padding:0.5rem 1.1rem;
+  border:1px solid var(--border);border-radius:6px;
+  color:var(--muted);
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.4s ease,transform 0.4s ease,border-color 0.25s,color 0.25s;
+  cursor:none;
+}
+.skill-pill.visible{opacity:1;transform:translateY(0);}
+.skill-pill:hover{border-color:var(--accent);color:var(--cream);}
+
+/* ═══════════════════════════════
+   CONTACT PAGE
+═══════════════════════════════ */
+#page-contact{background:var(--bg);}
+.contact-wrap{
+  min-height:100vh;padding:8rem 3rem 5rem;
+  display:flex;flex-direction:column;justify-content:center;
+  max-width:760px;
+}
+.contact-eyebrow{
+  font-size:0.65rem;text-transform:uppercase;letter-spacing:0.22em;
+  color:var(--accent);margin-bottom:2rem;
+  display:flex;align-items:center;gap:12px;
+}
+.contact-eyebrow::before{content:'';width:28px;height:1px;background:var(--accent);}
+.contact-h1{
+  font-family:var(--serif);font-size:clamp(2.75rem,6vw,5.5rem);
+  font-weight:400;letter-spacing:-0.04em;line-height:0.95;
+  margin-bottom:1rem;
+}
+.contact-h1 em{font-style:italic;color:var(--accent);}
+
+.typewriter-wrap{
+  font-size:1.1rem;color:var(--muted);
+  margin-bottom:3.5rem;min-height:1.8em;
+}
+#typewriter{border-right:2px solid var(--accent);padding-right:3px;animation:blink 0.8s ease infinite;}
+@keyframes blink{0%,100%{border-color:var(--accent);}50%{border-color:transparent;}}
+
+.contact-form{display:flex;flex-direction:column;gap:1.25rem;}
+.cf-group{
+  opacity:0;transform:translateY(16px);
+  transition:opacity 0.5s var(--ease),transform 0.5s var(--ease);
+}
+.cf-group.visible{opacity:1;transform:translateY(0);}
+.cf-label{
+  display:block;font-size:0.65rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.14em;
+  color:var(--dim);margin-bottom:0.5rem;
+}
+.cf-input,.cf-textarea{
+  width:100%;padding:1rem 1.25rem;
+  background:var(--bg-2);border:1px solid var(--dim);
+  border-radius:0;color:var(--cream);
+  font-family:var(--sans);font-size:0.95rem;font-weight:300;
+  outline:none;transition:border-color 0.3s ease,background 0.3s ease;
+}
+.cf-input::placeholder,.cf-textarea::placeholder{color:rgba(138,134,128,0.4);}
+.cf-input:focus,.cf-textarea:focus{border-color:var(--accent);background:var(--bg-3);}
+.cf-textarea{resize:vertical;min-height:120px;}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+.contact-meta{
+  display:flex;align-items:center;gap:2rem;margin-top:0.5rem;
+  font-size:0.78rem;color:var(--muted);
+}
+.contact-meta a{transition:color 0.25s ease;cursor:none;}
+.contact-meta a:hover{color:var(--cream);}
+.contact-divider{width:1px;height:14px;background:var(--dim);}
+
+.form-success{
+  display:none;text-align:left;padding:3rem 0;
+}
+.form-success.show{display:block;}
+.success-icon{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(196,67,26,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.25rem;margin-bottom:1.5rem;
+  animation:popIn 0.5s var(--ease);
+}
+@keyframes popIn{from{transform:scale(0);}60%{transform:scale(1.15);}to{transform:scale(1);}}
+.form-success h3{
+  font-family:var(--serif);font-size:2rem;font-weight:400;
+  margin-bottom:0.5rem;
+}
+.form-success p{color:var(--muted);font-size:0.9rem;}
+
+/* tile burst */
+.burst-tile{
+  position:fixed;border-radius:3px;
+  background:var(--accent);pointer-events:none;
+  animation:burst 0.8s var(--ease) forwards;z-index:9998;
+}
+@keyframes burst{
+  from{opacity:0.8;transform:scale(0);}
+  to{opacity:0;transform:scale(1) translate(var(--bx),var(--by));}
+}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--bg-2);color:var(--muted);
+  padding:1.75rem 3rem;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:0.72rem;letter-spacing:0.05em;
+}
+footer a{color:var(--muted);transition:color 0.25s;cursor:none;}
+footer a:hover{color:var(--cream);}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+.fade-up{
+  opacity:0;transform:translateY(24px);
+  transition:opacity 0.7s var(--ease),transform 0.7s var(--ease);
+}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .work-grid{grid-template-columns:repeat(2,1fr);}
+  .about-hero{grid-template-columns:1fr;gap:3rem;}
+  .about-right{display:none;}
+}
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem;}
+  .nav-tabs{gap:0;}
+  .nav-tab{padding:0.4rem 0.7rem;font-size:0.65rem;}
+  .hero{padding:1.5rem 1.5rem 4rem;}
+  .stats-bar{grid-template-columns:1fr;padding:2rem 1.5rem;}
+  .stat-item{border-left:none;border-top:1px solid var(--border);padding:1.5rem 0;}
+  .stat-item:first-child{border-top:none;padding-top:0;}
+  .services-section,.process-section,.cta-strip{padding:4rem 1.5rem;}
+  .services-grid{grid-template-columns:1fr;}
+  .process-steps{grid-template-columns:1fr;}
+  .proc-step{border-left:none;border-top:1px solid var(--border);padding:2rem 0;}
+  .proc-step:first-child{border-top:none;}
+  .cta-strip{flex-direction:column;align-items:flex-start;}
+  .work-header,.about-hero,.contact-wrap{padding:6rem 1.5rem 3rem;}
+  .work-filters{padding:1.25rem 1.5rem;top:64px;}
+  .work-grid{grid-template-columns:1fr;background:none;gap:1px;}
+  .skills-section{padding:3.5rem 1.5rem;}
+  .cf-row{grid-template-columns:1fr;}
+}
+</style>
 </head>
 <body>
 
-    <!-- Custom cursor -->
-    <div class="cursor-dot" id="cursor-dot"></div>
-    <div class="cursor-ring" id="cursor-ring"></div>
+<!-- CURSOR -->
+<div id="cursor"></div>
 
-    <nav id="main-nav" class="nav-light">
-        <a href="#" class="logo">
-            <div class="logo-mark">
-                <div class="tile tile-accent"></div>
-                <div class="tile tile-dark"></div>
-            </div>
-            <span class="logo-text">Tesselo</span>
-        </a>
-        <ul class="nav-links">
-            <li><a href="#services">Services</a></li>
-            <li><a href="#work">Work</a></li>
-            <li><a href="#process">Process</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#home" class="nav-logo" data-tab="home">
+    <div class="logo-mark"><div class="t1"></div><div class="t2"></div></div>
+    <span class="logo-text">Tesselo</span>
+  </a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-tab="home">Home</button>
+    <button class="nav-tab" data-tab="work">Work</button>
+    <button class="nav-tab" data-tab="about">About</button>
+    <button class="nav-tab" data-tab="contact">Contact</button>
+  </div>
+</nav>
 
-    <section class="hero" data-nav="light">
-        <div class="hero-bg-tiles">
-            <!-- Core cluster top-right - large, bold -->
-            <div class="bg-tile" style="width:64px;height:64px;top:2%;right:2%;background:var(--accent);--tile-op:0.35;--tile-rot:0deg;animation-delay:0.3s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:2%;right:calc(2% + 68px);background:var(--accent);--tile-op:0.28;--tile-rot:0deg;animation-delay:0.38s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:2%;right:calc(2% + 136px);background:var(--accent);--tile-op:0.20;--tile-rot:0deg;animation-delay:0.44s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 68px);right:2%;background:var(--white);--tile-op:0.12;--tile-rot:0deg;animation-delay:0.42s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 68px);right:calc(2% + 68px);background:var(--accent);--tile-op:0.30;--tile-rot:0deg;animation-delay:0.48s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 68px);right:calc(2% + 136px);background:var(--white);--tile-op:0.08;--tile-rot:0deg;animation-delay:0.52s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 136px);right:2%;background:var(--accent);--tile-op:0.22;--tile-rot:0deg;animation-delay:0.5s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 136px);right:calc(2% + 68px);background:var(--accent);--tile-op:0.15;--tile-rot:0deg;animation-delay:0.56s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 136px);right:calc(2% + 136px);background:var(--accent);--tile-op:0.10;--tile-rot:0deg;animation-delay:0.6s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:2%;right:calc(2% + 204px);background:var(--white);--tile-op:0.06;--tile-rot:0deg;animation-delay:0.58s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 68px);right:calc(2% + 204px);background:var(--accent);--tile-op:0.10;--tile-rot:0deg;animation-delay:0.64s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 204px);right:2%;background:var(--white);--tile-op:0.07;--tile-rot:0deg;animation-delay:0.62s;"></div>
-            <div class="bg-tile" style="width:64px;height:64px;top:calc(2% + 204px);right:calc(2% + 68px);background:var(--accent);--tile-op:0.09;--tile-rot:0deg;animation-delay:0.66s;"></div>
+<!-- ═══════ HOME ═══════ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="grid-texture"></div>
+    <div class="hero-bg-tiles" id="hero-tiles"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">AI-Assisted Development Studio</div>
+      <h1 class="hero-h1">
+        <span class="hero-word" style="animation-delay:0.5s">Build&nbsp;it.</span><br>
+        <span class="hero-word accent-block" style="animation-delay:0.75s;margin-left:12%">Ship&nbsp;it.</span>
+      </h1>
+      <div class="hero-bottom">
+        <p class="hero-sub">If it can be done on a screen, it can be built. Websites, apps, tools, dashboards, automations, documents — no project too broad, no brief too niche.</p>
+        <a href="#contact" class="hero-cta" data-tab="contact"><span>Start a project &nbsp;→</span></a>
+      </div>
+    </div>
+  </section>
 
-            <!-- Second ring - starting to break apart, spreading left -->
-            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 278px);right:calc(2% + 10px);background:var(--accent);--tile-op:0.16;--tile-rot:3deg;animation-delay:0.72s;"></div>
-            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 278px);right:calc(2% + 72px);background:var(--accent);--tile-op:0.11;--tile-rot:-2deg;animation-delay:0.76s;"></div>
-            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 278px);right:calc(2% + 140px);background:var(--white);--tile-op:0.05;--tile-rot:4deg;animation-delay:0.8s;"></div>
-            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 204px);right:calc(2% + 148px);background:var(--accent);--tile-op:0.08;--tile-rot:-3deg;animation-delay:0.78s;"></div>
-            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 136px);right:calc(2% + 212px);background:var(--accent);--tile-op:0.07;--tile-rot:2deg;animation-delay:0.82s;"></div>
-            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 68px);right:calc(2% + 274px);background:var(--white);--tile-op:0.05;--tile-rot:-4deg;animation-delay:0.86s;"></div>
-            <div class="bg-tile" style="width:52px;height:52px;top:2%;right:calc(2% + 276px);background:var(--accent);--tile-op:0.08;--tile-rot:3deg;animation-delay:0.84s;"></div>
-            <div class="bg-tile" style="width:52px;height:52px;top:2%;right:calc(2% + 340px);background:var(--accent);--tile-op:0.06;--tile-rot:-2deg;animation-delay:0.88s;"></div>
-            <div class="bg-tile" style="width:52px;height:52px;top:calc(2% + 68px);right:calc(2% + 340px);background:var(--white);--tile-op:0.04;--tile-rot:3deg;animation-delay:0.9s;"></div>
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num"><span class="count-up" data-target="48">0</span><span class="accent">hr</span></div>
+      <div class="stat-label">First delivery</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="accent">∞</span></div>
+      <div class="stat-label">No limitations on scope</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="count-up" data-target="100">0</span><span class="accent">%</span></div>
+      <div class="stat-label">You own everything</div>
+    </div>
+  </div>
 
-            <!-- Mid scatter - spreading across and falling down -->
-            <div class="bg-tile" style="width:44px;height:44px;top:42%;right:5%;background:var(--accent);--tile-op:0.14;--tile-rot:8deg;animation-delay:0.92s;"></div>
-            <div class="bg-tile" style="width:44px;height:44px;top:48%;right:12%;background:var(--accent);--tile-op:0.10;--tile-rot:-10deg;animation-delay:0.96s;"></div>
-            <div class="bg-tile" style="width:40px;height:40px;top:38%;right:18%;background:var(--white);--tile-op:0.06;--tile-rot:14deg;animation-delay:1.0s;"></div>
-            <div class="bg-tile" style="width:40px;height:40px;top:52%;right:20%;background:var(--accent);--tile-op:0.08;--tile-rot:-6deg;animation-delay:1.02s;"></div>
-            <div class="bg-tile" style="width:38px;height:38px;top:35%;right:28%;background:var(--accent);--tile-op:0.07;--tile-rot:18deg;animation-delay:1.04s;"></div>
-            <div class="bg-tile" style="width:38px;height:38px;top:22%;right:34%;background:var(--accent);--tile-op:0.06;--tile-rot:-8deg;animation-delay:1.06s;"></div>
-            <div class="bg-tile" style="width:36px;height:36px;top:44%;right:32%;background:var(--white);--tile-op:0.04;--tile-rot:12deg;animation-delay:1.08s;"></div>
-            <div class="bg-tile" style="width:36px;height:36px;top:15%;right:40%;background:var(--accent);--tile-op:0.06;--tile-rot:-15deg;animation-delay:1.1s;"></div>
-            <div class="bg-tile" style="width:36px;height:36px;top:28%;right:44%;background:var(--accent);--tile-op:0.05;--tile-rot:10deg;animation-delay:1.12s;"></div>
-            <div class="bg-tile" style="width:34px;height:34px;top:8%;right:48%;background:var(--white);--tile-op:0.04;--tile-rot:-5deg;animation-delay:1.14s;"></div>
-            <div class="bg-tile" style="width:34px;height:34px;top:40%;right:42%;background:var(--accent);--tile-op:0.05;--tile-rot:8deg;animation-delay:1.16s;"></div>
+  <section class="services-section">
+    <div class="section-label">Examples of what I build — but not limited to</div>
+    <div class="services-grid">
+      <div class="svc-card">
+        <div class="svc-num">01</div>
+        <h3>Websites &amp; Landing Pages</h3>
+        <p class="svc-desc">Marketing sites, portfolios, product pages, and business homepages. Designed, built, and deployed fast — with animations, responsive layouts, and SEO baked in.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">02</div>
+        <h3>Web Apps &amp; SaaS Tools</h3>
+        <p class="svc-desc">Full MVPs, dashboards, platforms, and customer-facing applications. From idea to working product in weeks, not months — ready to test with real users.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">03</div>
+        <h3>Internal Tools &amp; Automations</h3>
+        <p class="svc-desc">Task boards, CRMs, workflow tools, booking systems. Replace manual processes and spreadsheet chaos with custom-built solutions that actually work.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">04</div>
+        <h3>Documents &amp; Presentations</h3>
+        <p class="svc-desc">Reports, proposals, pitch decks, spreadsheets, and formatted documents. Professionally structured, branded, and ready to send — no templates, no fluff.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">05</div>
+        <h3>Data &amp; Visualisation</h3>
+        <p class="svc-desc">Analysis, charts, interactive dashboards, and data pipelines. Turn raw numbers into clear insights your team can actually act on.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-num">06</div>
+        <h3>AI-Powered Solutions</h3>
+        <p class="svc-desc">Smart tools with AI at the core. Summarisers, content generators, analysers, and automations — custom-built to your specific needs.</p>
+      </div>
+    </div>
+  </section>
 
-            <!-- Far scatter - reaching across the page and falling further -->
-            <div class="bg-tile" style="width:28px;height:28px;top:58%;right:15%;background:var(--accent);--tile-op:0.07;--tile-rot:-22deg;animation-delay:1.18s;"></div>
-            <div class="bg-tile" style="width:28px;height:28px;top:55%;right:34%;background:var(--accent);--tile-op:0.05;--tile-rot:28deg;animation-delay:1.2s;"></div>
-            <div class="bg-tile" style="width:26px;height:26px;top:62%;right:8%;background:var(--white);--tile-op:0.04;--tile-rot:-35deg;animation-delay:1.22s;"></div>
-            <div class="bg-tile" style="width:26px;height:26px;top:50%;right:48%;background:var(--accent);--tile-op:0.04;--tile-rot:30deg;animation-delay:1.24s;"></div>
-            <div class="bg-tile" style="width:24px;height:24px;top:65%;right:26%;background:var(--accent);--tile-op:0.04;--tile-rot:-25deg;animation-delay:1.26s;"></div>
-            <div class="bg-tile" style="width:24px;height:24px;top:18%;right:52%;background:var(--accent);--tile-op:0.04;--tile-rot:20deg;animation-delay:1.28s;"></div>
-            <div class="bg-tile" style="width:22px;height:22px;top:35%;right:54%;background:var(--white);--tile-op:0.03;--tile-rot:-18deg;animation-delay:1.3s;"></div>
-            <div class="bg-tile" style="width:22px;height:22px;top:58%;right:44%;background:var(--accent);--tile-op:0.04;--tile-rot:35deg;animation-delay:1.32s;"></div>
-            <div class="bg-tile" style="width:20px;height:20px;top:70%;right:18%;background:var(--accent);--tile-op:0.03;--tile-rot:32deg;animation-delay:1.34s;"></div>
-            <div class="bg-tile" style="width:20px;height:20px;top:68%;right:38%;background:var(--white);--tile-op:0.03;--tile-rot:-42deg;animation-delay:1.36s;"></div>
-            <div class="bg-tile" style="width:20px;height:20px;top:10%;right:58%;background:var(--accent);--tile-op:0.03;--tile-rot:15deg;animation-delay:1.38s;"></div>
-            <div class="bg-tile" style="width:18px;height:18px;top:48%;right:56%;background:var(--accent);--tile-op:0.03;--tile-rot:-28deg;animation-delay:1.4s;"></div>
+  <section class="process-section">
+    <div class="section-label">How it works</div>
+    <div class="process-steps">
+      <div class="proc-step">
+        <div class="step-roman">i</div>
+        <h4>Discovery</h4>
+        <p>We talk through what you need, who it's for, and what success looks like. No jargon, no fluff.</p>
+      </div>
+      <div class="proc-step">
+        <div class="step-roman">ii</div>
+        <h4>Build</h4>
+        <p>I build fast using AI-assisted development. You see working progress within days, not weeks.</p>
+      </div>
+      <div class="proc-step">
+        <div class="step-roman">iii</div>
+        <h4>Iterate</h4>
+        <p>You test, you feedback, I refine. Tight loops until it's right. You're involved throughout.</p>
+      </div>
+      <div class="proc-step">
+        <div class="step-roman">iv</div>
+        <h4>Ship</h4>
+        <p>Deployed, documented, and handed over. You own everything. I stick around if you need support.</p>
+      </div>
+    </div>
+  </section>
 
-            <!-- Furthest drift - tiny tiles reaching far left and bottom -->
-            <div class="bg-tile" style="width:16px;height:16px;top:25%;right:60%;background:var(--accent);--tile-op:0.025;--tile-rot:40deg;animation-delay:1.42s;"></div>
-            <div class="bg-tile" style="width:16px;height:16px;top:72%;right:10%;background:var(--accent);--tile-op:0.025;--tile-rot:-35deg;animation-delay:1.44s;"></div>
-            <div class="bg-tile" style="width:14px;height:14px;top:60%;right:55%;background:var(--accent);--tile-op:0.02;--tile-rot:45deg;animation-delay:1.46s;"></div>
-            <div class="bg-tile" style="width:14px;height:14px;top:75%;right:30%;background:var(--white);--tile-op:0.02;--tile-rot:-40deg;animation-delay:1.48s;"></div>
-            <div class="bg-tile" style="width:14px;height:14px;top:5%;right:64%;background:var(--accent);--tile-op:0.02;--tile-rot:22deg;animation-delay:1.5s;"></div>
-            <div class="bg-tile" style="width:12px;height:12px;top:42%;right:62%;background:var(--accent);--tile-op:0.02;--tile-rot:-48deg;animation-delay:1.52s;"></div>
-            <div class="bg-tile" style="width:12px;height:12px;top:76%;right:48%;background:var(--accent);--tile-op:0.02;--tile-rot:38deg;animation-delay:1.54s;"></div>
-            <div class="bg-tile" style="width:10px;height:10px;top:68%;right:58%;background:var(--accent);--tile-op:0.015;--tile-rot:-52deg;animation-delay:1.56s;"></div>
-            <div class="bg-tile" style="width:10px;height:10px;top:32%;right:66%;background:var(--white);--tile-op:0.015;--tile-rot:42deg;animation-delay:1.58s;"></div>
-            <div class="bg-tile" style="width:10px;height:10px;top:78%;right:22%;background:var(--accent);--tile-op:0.015;--tile-rot:-30deg;animation-delay:1.6s;"></div>
+  <div class="cta-strip fade-up">
+    <h2>Ready to <em>build</em><br>something?</h2>
+    <a href="#contact" class="btn-ghost" data-tab="contact"><span>Start a project &nbsp;→</span></a>
+  </div>
+
+  <footer>
+    <div style="display:flex;align-items:center;gap:0.6rem;">
+      <div style="width:8px;height:8px;border-radius:2px;background:var(--accent);"></div>
+      <span>© 2026 Tesselo</span>
+    </div>
+    <span>Built with AI-assisted development</span>
+  </footer>
+</div>
+
+<!-- ═══════ WORK ═══════ -->
+<div class="page" id="page-work">
+  <div class="work-header">
+    <div class="section-label" style="margin-bottom:1.5rem;">Selected work</div>
+    <h1 class="fade-up"><em>Real products.</em><br>Shipped fast.</h1>
+    <p class="fade-up" style="transition-delay:0.1s;margin-top:1rem;">Each project below is a live, working demo — built with AI-assisted development to show what's possible.</p>
+  </div>
+
+  <div class="work-filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="web-app">Web App</button>
+    <button class="filter-btn" data-filter="ai-tool">AI Tool</button>
+    <button class="filter-btn" data-filter="internal-tool">Internal Tool</button>
+    <button class="filter-btn" data-filter="marketing">Marketing</button>
+  </div>
+
+  <div class="work-grid" id="work-grid">
+    <div class="project-card" data-category="web-app">
+      <div class="proj-tag">
+        Wellness Studio
+        <span class="proj-tag-type">Web App</span>
+      </div>
+      <h3>BookIt</h3>
+      <p>A fully interactive booking and scheduling application. Service selection, live calendar, time slot picker, multi-step booking form, confirmation flow, and appointment history — all working in the browser.</p>
+      <div class="proj-tech">
+        <span class="tech-tag">HTML/CSS/JS</span>
+        <span class="tech-tag">SPA</span>
+        <span class="tech-tag">Booking Flow</span>
+        <span class="tech-tag">Calendar UI</span>
+      </div>
+      <a href="/bookit.html" target="_blank" class="proj-link">Live Demo &nbsp;↗</a>
+    </div>
+    <div class="project-card" data-category="internal-tool">
+      <div class="proj-tag">
+        Project Management
+        <span class="proj-tag-type">Internal Tool</span>
+      </div>
+      <h3>Kanflow</h3>
+      <p>A drag-and-drop Kanban task board. Columns, task cards with priorities and assignees, sprint progress tracking, full CRUD, and modal-based task creation — all interactive and state-driven.</p>
+      <div class="proj-tech">
+        <span class="tech-tag">HTML/CSS/JS</span>
+        <span class="tech-tag">Drag &amp; Drop</span>
+        <span class="tech-tag">Dark Mode</span>
+        <span class="tech-tag">CRUD</span>
+      </div>
+      <a href="/kanflow.html" target="_blank" class="proj-link">Live Demo &nbsp;↗</a>
+    </div>
+    <div class="project-card" data-category="ai-tool">
+      <div class="proj-tag">
+        AI-Powered App
+        <span class="proj-tag-type">AI Tool</span>
+      </div>
+      <h3>Briefly</h3>
+      <p>An AI document summariser. Paste any text, get structured key points, action items, and a summary — with a word-by-word streaming output effect and smart text analysis engine.</p>
+      <div class="proj-tech">
+        <span class="tech-tag">HTML/CSS/JS</span>
+        <span class="tech-tag">NLP Engine</span>
+        <span class="tech-tag">Streaming UI</span>
+        <span class="tech-tag">AI-Powered</span>
+      </div>
+      <a href="/briefly.html" target="_blank" class="proj-link">Live Demo &nbsp;↗</a>
+    </div>
+    <div class="project-card" data-category="marketing">
+      <div class="proj-tag">
+        Campaign Platform
+        <span class="proj-tag-type">Marketing</span>
+      </div>
+      <h3>MarkBlaze</h3>
+      <p>A high-speed marketing campaign platform. Features dashboard, campaign analytics, speed metrics, tiered pricing, and a full product landing experience — built to show what a modern SaaS marketing tool looks and feels like.</p>
+      <div class="proj-tech">
+        <span class="tech-tag">HTML/CSS/JS</span>
+        <span class="tech-tag">SaaS UI</span>
+        <span class="tech-tag">Pricing</span>
+        <span class="tech-tag">Animations</span>
+      </div>
+      <a href="/markblaze.html" target="_blank" class="proj-link">Live Demo &nbsp;↗</a>
+    </div>
+  </div>
+
+  <footer style="margin-top:auto;">
+    <div style="display:flex;align-items:center;gap:0.6rem;">
+      <div style="width:8px;height:8px;border-radius:2px;background:var(--accent);"></div>
+      <span>© 2026 Tesselo</span>
+    </div>
+    <span>Built with AI-assisted development</span>
+  </footer>
+</div>
+
+<!-- ═══════ ABOUT ═══════ -->
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <div class="about-left">
+      <div class="about-eyebrow">About Tesselo</div>
+      <h1 class="about-h1">Building the<br>future, <em>fast.</em></h1>
+      <p class="about-intro">I'm Finn — a developer and problem solver based in the UK. Tesselo is my AI-assisted development studio, built on a simple premise: the best ideas deserve to exist, and they deserve to exist quickly.</p>
+      <p class="about-story">Traditional development is slow, expensive, and bloated with process. AI-assisted development changes that. I use cutting-edge tools to compress weeks of work into days — without cutting corners on quality, design, or ownership. Whether you're a founder who needs an MVP, a small business who needs a professional web presence, or a company that needs a custom internal tool — Tesselo builds it, ships it, and hands it over to you. No lock-in. No ongoing dependency. Just great work, fast.</p>
+    </div>
+    <div class="about-right">
+      <div class="about-tile-art" id="about-tiles"></div>
+      <div class="differentiators">
+        <div class="diff-item">
+          <div class="diff-num">01</div>
+          <h4>Speed without compromise</h4>
+          <p>AI-assisted development compresses timelines without cutting corners. You get the same quality — delivered in a fraction of the time.</p>
         </div>
-        <div class="hero-content">
-            <h1>
-                <span class="line-1">Build it.</span><br>
-                <span class="line-2">Ship it.</span>
-            </h1>
-            <div class="hero-bottom">
-                <p class="hero-sub">From websites to web apps, dashboards to documents &#8212; if you can describe it, Tesselo can build it. AI-assisted development that moves at the speed of your ideas.</p>
-                <span class="hero-tag">AI-Assisted Development Studio</span>
-            </div>
+        <div class="diff-item">
+          <div class="diff-num">02</div>
+          <h4>You own everything</h4>
+          <p>No subscriptions, no lock-in, no dependency on Tesselo to keep things running. Every line of code is yours from day one.</p>
         </div>
-        <div class="scroll-indicator">
-            <span>Scroll</span>
-            <div class="scroll-track"><div class="scroll-thumb"></div></div>
+        <div class="diff-item">
+          <div class="diff-num">03</div>
+          <h4>No fluff. Just build.</h4>
+          <p>No discovery workshops that last a month. No 40-slide decks before anything gets made. We talk, we build, we iterate.</p>
         </div>
-    </section>
-        <div class="section-label fade-in">What I build</div>
-        <div class="services-grid">
-            <div class="service-card fade-in stagger-1">
-                <div class="service-num">01</div>
-                <h3 class="char-reveal">Websites &#38; Landing Pages</h3>
-                <p>Marketing sites, portfolios, product pages, and business homepages. Designed, built, and deployed fast &#8212; with animations, responsive layouts, and SEO baked in.</p>
-            </div>
-            <div class="service-card fade-in stagger-2">
-                <div class="service-num">02</div>
-                <h3 class="char-reveal">Web Apps &#38; SaaS Tools</h3>
-                <p>Full MVPs, dashboards, platforms, and customer-facing applications. From idea to working product in weeks, not months &#8212; ready to test with real users.</p>
-            </div>
-            <div class="service-card fade-in stagger-1">
-                <div class="service-num">03</div>
-                <h3 class="char-reveal">Internal Tools &#38; Automations</h3>
-                <p>Task boards, CRMs, workflow tools, booking systems. Replace manual processes and spreadsheet chaos with custom-built solutions that actually work.</p>
-            </div>
-            <div class="service-card fade-in stagger-2">
-                <div class="service-num">04</div>
-                <h3 class="char-reveal">Documents &#38; Presentations</h3>
-                <p>Reports, proposals, pitch decks, spreadsheets, and formatted documents. Professionally structured, branded, and ready to send &#8212; no templates, no fluff.</p>
-            </div>
-            <div class="service-card fade-in stagger-1">
-                <div class="service-num">05</div>
-                <h3 class="char-reveal">Data &#38; Visualisation</h3>
-                <p>Analysis, charts, interactive dashboards, and data pipelines. Turn raw numbers into clear insights your team can actually act on.</p>
-            </div>
-            <div class="service-card fade-in stagger-2">
-                <div class="service-num">06</div>
-                <h3 class="char-reveal">AI-Powered Solutions</h3>
-                <p>Smart tools with AI at the core. Summarisers, content generators, analysers, and automations &#8212; custom-built to your specific needs.</p>
-            </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="skills-section">
+    <div class="section-label" style="margin-bottom:2rem;">Tools &amp; technologies</div>
+    <div class="skills-grid" id="skills-grid">
+      <span class="skill-pill">HTML / CSS / JS</span>
+      <span class="skill-pill">AI-Assisted Development</span>
+      <span class="skill-pill">Claude</span>
+      <span class="skill-pill">Responsive Design</span>
+      <span class="skill-pill">CSS Animations</span>
+      <span class="skill-pill">SPA Architecture</span>
+      <span class="skill-pill">GitHub Pages</span>
+      <span class="skill-pill">Formspree</span>
+      <span class="skill-pill">Google Fonts</span>
+      <span class="skill-pill">Canva</span>
+      <span class="skill-pill">UI/UX Design</span>
+      <span class="skill-pill">Web Performance</span>
+      <span class="skill-pill">SEO Fundamentals</span>
+      <span class="skill-pill">Drag &amp; Drop UI</span>
+      <span class="skill-pill">Data Visualisation</span>
+      <span class="skill-pill">API Integrations</span>
+    </div>
+    <div style="margin-top:3rem;">
+      <a href="#contact" class="btn-primary" data-tab="contact">Work with me &nbsp;→</a>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;align-items:center;gap:0.6rem;">
+      <div style="width:8px;height:8px;border-radius:2px;background:var(--accent);"></div>
+      <span>© 2026 Tesselo</span>
+    </div>
+    <span>Built with AI-assisted development</span>
+  </footer>
+</div>
+
+<!-- ═══════ CONTACT ═══════ -->
+<div class="page" id="page-contact">
+  <div class="contact-wrap">
+    <div class="contact-eyebrow">Get in touch</div>
+    <h1 class="contact-h1">Let's <em>build</em><br>something.</h1>
+    <div class="typewriter-wrap">
+      <span id="typewriter"></span>
+    </div>
+    <div id="contact-form-wrapper">
+      <form class="contact-form" id="contact-form" action="https://formspree.io/f/mjgpgrkk" method="POST">
+        <div class="cf-group cf-row">
+          <div>
+            <label class="cf-label" for="cf-name">Name *</label>
+            <input class="cf-input" type="text" id="cf-name" name="name" placeholder="Your full name" required>
+          </div>
+          <div>
+            <label class="cf-label" for="cf-email">Email *</label>
+            <input class="cf-input" type="email" id="cf-email" name="email" placeholder="you@company.com" required>
+          </div>
         </div>
-    </section>
-
-    <section class="work" id="work" data-nav="light">
-        <div class="section-label fade-in">Selected Work</div>
-        <p class="work-intro slide-in-left">You describe it. I build it. These are <em>real products</em> built with AI-assisted development &#8212; each one shipped, not just designed.</p>
-        <div class="project-grid">
-            <a href="/bookit.html" class="project-card fade-in stagger-1" style="text-decoration:none;color:inherit;">
-                <span class="project-placeholder" style="border-color:var(--accent);color:var(--accent);">Live Demo</span>
-                <div class="project-tag">Web Application &#8212; Wellness Studio</div>
-                <h4>BookIt</h4>
-                <p>A fully interactive booking and scheduling app. Service selection, calendar, time slot picker, booking form, and confirmation flow &#8212; all working.</p>
-            </a>
-            <a href="/kanflow.html" class="project-card fade-in stagger-2" style="text-decoration:none;color:inherit;">
-                <span class="project-placeholder" style="border-color:var(--accent);color:var(--accent);">Live Demo</span>
-                <div class="project-tag">Internal Tool &#8212; Project Management</div>
-                <h4>Kanflow</h4>
-                <p>A drag-and-drop Kanban task board. Columns, task cards with priorities and assignees, progress tracking, and full CRUD &#8212; all interactive.</p>
-            </a>
-            <a href="/briefly.html" class="project-card fade-in stagger-3" style="text-decoration:none;color:inherit;">
-                <span class="project-placeholder" style="border-color:var(--accent);color:var(--accent);">Live Demo</span>
-                <div class="project-tag">AI-Powered App</div>
-                <h4>Briefly</h4>
-                <p>An AI document summariser. Paste any text, get structured key points, action items, and a summary &#8212; with a streaming output effect.</p>
-            </a>
-            <a href="/markblaze.html" class="project-card fade-in stagger-4" style="text-decoration:none;color:inherit;">
-                <span class="project-placeholder" style="border-color:var(--accent);color:var(--accent);">Live Demo</span>
-                <div class="project-tag">SaaS Marketing Platform</div>
-                <h4>Markblaze</h4>
-                <p>A full marketing SaaS landing site. Bold editorial design, animated hero, feature grid, pricing tiers, and social proof &#8212; built to convert.</p>
-            </a>
+        <div class="cf-group">
+          <label class="cf-label" for="cf-msg">Tell me about your project *</label>
+          <textarea class="cf-textarea" id="cf-msg" name="message" placeholder="What are you building, who is it for, and what's your timeline?" required></textarea>
         </div>
-    </section>
-
-    <section class="process" id="process" data-nav="dark">
-        <div class="process-bg-glyph" id="proc-glyph">i</div>
-        <div class="section-label fade-in">How it works</div>
-        <div class="process-steps">
-            <div class="process-step fade-in stagger-1" data-g="i">
-                <div class="step-num">i</div>
-                <h4 class="char-reveal">Discovery</h4>
-                <p>We talk through what you need, who it's for, and what success looks like. No jargon, no fluff.</p>
-            </div>
-            <div class="process-step fade-in stagger-2" data-g="ii">
-                <div class="step-num">ii</div>
-                <h4 class="char-reveal">Build</h4>
-                <p>I build fast using AI-assisted development. You see working progress within days, not weeks. Real code, real product.</p>
-            </div>
-            <div class="process-step fade-in stagger-3" data-g="iii">
-                <div class="step-num">iii</div>
-                <h4 class="char-reveal">Iterate</h4>
-                <p>You test, you feedback, I refine. Tight loops until it's right. No long disappearances &#8212; you're involved throughout.</p>
-            </div>
-            <div class="process-step fade-in stagger-4" data-g="iv">
-                <div class="step-num">iv</div>
-                <h4 class="char-reveal">Ship</h4>
-                <p>Deployed, documented, and handed over. You own everything. I stick around if you need ongoing support.</p>
-            </div>
+        <div class="cf-group" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+          <button type="submit" class="btn-primary" id="cf-submit" style="cursor:none;">
+            <span id="cf-submit-text">Send message &nbsp;→</span>
+          </button>
+          <div class="contact-meta">
+            <a id="contact-email-link">hello@tesselo.dev</a>
+            <div class="contact-divider"></div>
+            <span>Usually within 24 hours</span>
+          </div>
         </div>
-    </section>
+      </form>
+      <div class="form-success" id="form-success">
+        <div class="success-icon">✓</div>
+        <h3>Message sent.</h3>
+        <p>Thanks for reaching out — I'll get back to you within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <section class="contact" id="contact" data-nav="light">
-        <div class="contact-inner">
-            <div class="contact-text fade-in">
-                <h2>Let's <em>build</em><br>something.</h2>
-                <p>Have an idea that needs building? A product that needs improving? Fill in the form and I'll get back to you within 24 hours.</p>
-                <p class="contact-direct">Or email directly: <a id="email-link">loading...</a></p>
-            </div>
-            <div id="contact-form-wrapper">
-                <form class="contact-form fade-in stagger-1" id="contact-form" action="https://formspree.io/f/mjgpgrkk" method="POST">
-                    <div class="form-row">
-                        <div>
-                            <label for="name">Name *</label>
-                            <input type="text" id="name" name="name" placeholder="Your full name" required>
-                        </div>
-                        <div>
-                            <label for="email">Email *</label>
-                            <input type="email" id="email" name="email" placeholder="you&#64;company.com" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div>
-                            <label for="phone">Phone</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+44 7000 000000">
-                        </div>
-                        <div>
-                            <label for="company">Company</label>
-                            <input type="text" id="company" name="company" placeholder="Your company name">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="message">Message *</label>
-                        <textarea id="message" name="message" placeholder="Tell me about your project &#8212; what are you building, who is it for, and what's the timeline?" required></textarea>
-                    </div>
-                    <button type="submit" class="form-submit"><span>Send Message</span></button>
-                </form>
-                <div class="form-success" id="form-success">
-                    <div class="check">&#10003;</div>
-                    <h3>Message sent</h3>
-                    <p>Thanks for reaching out &#8212; I'll get back to you within 24 hours.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<script>
+// ── EMAIL (anti-Cloudflare obfuscation) ──
+(function(){
+  var parts=['hello','tesselo','dev'];
+  var addr=parts[0]+'@'+parts[1]+'.'+parts[2];
+  var el=document.getElementById('contact-email-link');
+  if(el){el.href='mail'+'to:'+addr;el.textContent=addr;}
+})();
 
-    <footer>
-        <div class="footer-logo">
-            <div class="tile" style="width:8px;height:8px;border-radius:2px;background:var(--accent);"></div>
-            <span>&#169; 2026 Tesselo</span>
-        </div>
-        <span>Built with AI-assisted development</span>
-    </footer>
+// ── CURSOR ──
+var cursor=document.getElementById('cursor');
+var mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+(function animCursor(){
+  cx+=(mx-cx)*0.18;cy+=(my-cy)*0.18;
+  cursor.style.left=cx+'px';cursor.style.top=cy+'px';
+  requestAnimationFrame(animCursor);
+})();
+document.addEventListener('mousedown',function(){cursor.classList.add('click');});
+document.addEventListener('mouseup',function(){cursor.classList.remove('click');});
+document.querySelectorAll('a,button,.svc-card,.project-card,.skill-pill,.filter-btn,.nav-tab').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cursor.classList.add('hover');});
+  el.addEventListener('mouseleave',function(){cursor.classList.remove('hover');});
+});
 
-    <script>
-        // Custom cursor
-        (function(){
-            var dot = document.getElementById('cursor-dot');
-            var ring = document.getElementById('cursor-ring');
-            if (!dot || !ring) return;
-            var mx = 0, my = 0, rx = 0, ry = 0;
-            var hidden = true;
+// ── HERO TILES ──
+(function(){
+  var container=document.getElementById('hero-tiles');
+  var tiles=[
+    {w:64,h:64,t:'2%',r:'2%',bg:'var(--accent)',op:0.35,rot:0,delay:0.3},
+    {w:64,h:64,t:'2%',r:'calc(2% + 68px)',bg:'var(--accent)',op:0.26,rot:0,delay:0.38},
+    {w:64,h:64,t:'2%',r:'calc(2% + 136px)',bg:'var(--accent)',op:0.18,rot:0,delay:0.44},
+    {w:64,h:64,t:'calc(2% + 68px)',r:'2%',bg:'var(--cream)',op:0.1,rot:0,delay:0.42},
+    {w:64,h:64,t:'calc(2% + 68px)',r:'calc(2% + 68px)',bg:'var(--accent)',op:0.28,rot:0,delay:0.48},
+    {w:64,h:64,t:'calc(2% + 68px)',r:'calc(2% + 136px)',bg:'var(--cream)',op:0.07,rot:0,delay:0.52},
+    {w:64,h:64,t:'calc(2% + 136px)',r:'2%',bg:'var(--accent)',op:0.2,rot:0,delay:0.5},
+    {w:64,h:64,t:'calc(2% + 136px)',r:'calc(2% + 68px)',bg:'var(--accent)',op:0.13,rot:0,delay:0.56},
+    {w:52,h:52,t:'calc(2% + 210px)',r:'2%',bg:'var(--accent)',op:0.14,rot:3,delay:0.62},
+    {w:52,h:52,t:'calc(2% + 210px)',r:'calc(2% + 60px)',bg:'var(--accent)',op:0.09,rot:-2,delay:0.66},
+    {w:44,h:44,t:'40%',r:'4%',bg:'var(--accent)',op:0.12,rot:8,delay:0.72},
+    {w:44,h:44,t:'47%',r:'11%',bg:'var(--accent)',op:0.09,rot:-10,delay:0.76},
+    {w:38,h:38,t:'36%',r:'17%',bg:'var(--cream)',op:0.05,rot:14,delay:0.8},
+    {w:36,h:36,t:'22%',r:'28%',bg:'var(--accent)',op:0.06,rot:-8,delay:0.84},
+    {w:30,h:30,t:'54%',r:'8%',bg:'var(--accent)',op:0.07,rot:-22,delay:0.88},
+    {w:28,h:28,t:'60%',r:'22%',bg:'var(--accent)',op:0.05,rot:28,delay:0.92},
+    {w:24,h:24,t:'12%',r:'36%',bg:'var(--accent)',op:0.04,rot:15,delay:0.96},
+    {w:22,h:22,t:'32%',r:'44%',bg:'var(--cream)',op:0.03,rot:-18,delay:1.0},
+    {w:18,h:18,t:'65%',r:'14%',bg:'var(--accent)',op:0.03,rot:32,delay:1.04},
+    {w:16,h:16,t:'70%',r:'34%',bg:'var(--accent)',op:0.025,rot:-40,delay:1.08},
+    {w:14,h:14,t:'20%',r:'52%',bg:'var(--accent)',op:0.02,rot:22,delay:1.12},
+    {w:12,h:12,t:'48%',r:'50%',bg:'var(--accent)',op:0.02,rot:-35,delay:1.16},
+  ];
+  tiles.forEach(function(t){
+    var el=document.createElement('div');
+    el.className='bg-tile';
+    el.style.cssText='width:'+t.w+'px;height:'+t.h+'px;top:'+t.t+';right:'+t.r+';background:'+t.bg+';--op:'+t.op+';--rot:'+t.rot+'deg;animation-delay:'+t.delay+'s;';
+    container.appendChild(el);
+  });
+  // flicker
+  setTimeout(function(){
+    var allTiles=container.querySelectorAll('.bg-tile');
+    setInterval(function(){
+      var pick=allTiles[Math.floor(Math.random()*allTiles.length)];
+      var base=parseFloat(getComputedStyle(pick).opacity)||0.1;
+      pick.style.transition='opacity 0.7s ease';
+      pick.style.opacity=Math.min(base+(Math.random()*0.15+0.05),0.45);
+      setTimeout(function(){pick.style.transition='opacity 1.1s ease';pick.style.opacity='';},750+Math.random()*300);
+      if(Math.random()>0.55){
+        setTimeout(function(){
+          var p2=allTiles[Math.floor(Math.random()*allTiles.length)];
+          var b2=parseFloat(getComputedStyle(p2).opacity)||0.1;
+          p2.style.transition='opacity 0.7s ease';
+          p2.style.opacity=Math.min(b2+(Math.random()*0.15+0.05),0.45);
+          setTimeout(function(){p2.style.transition='opacity 1.1s ease';p2.style.opacity='';},750+Math.random()*300);
+        },140);
+      }
+    },700+Math.random()*600);
+  },2200);
+})();
 
-            document.addEventListener('mousemove', function(e){
-                mx = e.clientX; my = e.clientY;
-                dot.style.left = mx + 'px';
-                dot.style.top  = my + 'px';
-                if (hidden) {
-                    dot.classList.remove('is-hidden');
-                    ring.classList.remove('is-hidden');
-                    hidden = false;
-                }
-            });
-            document.addEventListener('mouseleave', function(){
-                dot.classList.add('is-hidden');
-                ring.classList.add('is-hidden');
-                hidden = true;
-            });
+// ── ABOUT TILE ART ──
+(function(){
+  var container=document.getElementById('about-tiles');
+  if(!container)return;
+  var defs=[
+    {w:80,h:80,t:'0%',l:'0%',bg:'var(--accent)',op:0.8},
+    {w:80,h:80,t:'0%',l:'88px',bg:'var(--accent)',op:0.5},
+    {w:80,h:80,t:'88px',l:'0%',bg:'var(--cream)',op:0.12},
+    {w:80,h:80,t:'88px',l:'88px',bg:'var(--accent)',op:0.65},
+    {w:80,h:80,t:'176px',l:'88px',bg:'var(--accent)',op:0.3},
+    {w:56,h:56,t:'188px',l:'0%',bg:'var(--accent)',op:0.18,rot:6},
+    {w:44,h:44,t:'270px',l:'100px',bg:'var(--cream)',op:0.08,rot:-4},
+    {w:36,h:36,t:'252px',l:'170px',bg:'var(--accent)',op:0.12,rot:10},
+  ];
+  defs.forEach(function(d,i){
+    var el=document.createElement('div');
+    el.className='at-tile';
+    el.style.cssText='width:'+d.w+'px;height:'+d.h+'px;top:'+d.t+';left:'+(d.l||'auto')+';background:'+d.bg+';--op:'+d.op+';'+(d.rot?'--rot:'+d.rot+'deg;':'')+'animation-delay:'+(0.2+i*0.08)+'s;border-radius:8px;';
+    container.appendChild(el);
+  });
+})();
 
-            // Smooth-follow ring
-            (function animateRing(){
-                rx += (mx - rx) * 0.1;
-                ry += (my - ry) * 0.1;
-                ring.style.left = rx + 'px';
-                ring.style.top  = ry + 'px';
-                requestAnimationFrame(animateRing);
-            })();
+// ── SPA ROUTER ──
+var pages={};
+var currentPage=null;
+document.querySelectorAll('.page').forEach(function(p){pages[p.id.replace('page-','')]=p;});
 
-            // Hover state on interactive elements
-            var hoverEls = 'a, button, .service-card, .project-card, .process-step';
-            document.querySelectorAll(hoverEls).forEach(function(el){
-                el.addEventListener('mouseenter', function(){
-                    dot.classList.add('is-hovering');
-                    ring.classList.add('is-hovering');
-                });
-                el.addEventListener('mouseleave', function(){
-                    dot.classList.remove('is-hovering');
-                    ring.classList.remove('is-hovering');
-                });
-            });
+function navigateTo(tab,pushState){
+  if(tab===currentPage)return;
+  var target=pages[tab];
+  if(!target)return;
+  // exit current
+  if(currentPage&&pages[currentPage]){
+    var prev=pages[currentPage];
+    prev.classList.add('exit');
+    setTimeout(function(){prev.classList.remove('active','exit');},380);
+  }
+  // enter new
+  setTimeout(function(){
+    target.classList.add('active');
+    target.scrollTop=0;
+    currentPage=tab;
+    // trigger scroll animations for the new page
+    triggerScrollAnimations(target);
+    if(tab==='contact')startTypewriter();
+    if(tab==='work')initWorkFilters();
+  },currentPage?120:0);
+  // update nav
+  document.querySelectorAll('.nav-tab').forEach(function(t){
+    t.classList.toggle('active',t.dataset.tab===tab);
+  });
+  if(pushState!==false){try{history.pushState({tab:tab},'','#'+tab);}catch(e){}}
+}
 
-            // Hide scroll indicator once user scrolls
-            var scrollInd = document.querySelector('.scroll-indicator');
-            if (scrollInd) {
-                window.addEventListener('scroll', function(){
-                    if (window.scrollY > 80) {
-                        scrollInd.style.opacity = Math.max(0, 1 - (window.scrollY - 80) / 80) + '';
-                    }
-                }, { passive: true });
-            }
-        })();
+// nav tab clicks
+document.querySelectorAll('.nav-tab').forEach(function(btn){
+  btn.addEventListener('click',function(){navigateTo(btn.dataset.tab);});
+});
+// internal links with data-tab
+document.querySelectorAll('[data-tab]').forEach(function(el){
+  if(el.classList.contains('nav-tab'))return;
+  el.addEventListener('click',function(e){
+    e.preventDefault();
+    navigateTo(el.dataset.tab);
+  });
+});
+// popstate
+window.addEventListener('popstate',function(e){
+  if(e.state&&e.state.tab)navigateTo(e.state.tab,false);
+});
+// init from hash
+var initTab=(location.hash.replace('#','')||'home');
+if(!pages[initTab])initTab='home';
+currentPage=null;
+navigateTo(initTab,false);
 
-        // Email built via JS to prevent Cloudflare email obfuscation
-        (function(){
-            var e = ['hello','tesselo','dev'];
-            var a = document.getElementById('email-link');
-            var addr = e[0]+'@'+e[1]+'.'+e[2];
-            a.href = 'mail'+'to:'+addr;
-            a.textContent = addr;
-        })();
+// ── SCROLL ANIMATIONS ──
+var scrollObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      if(entry.target.classList.contains('stat-item'))animateCountUp(entry.target);
+    }
+  });
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
 
-        // Nav reveal
-        window.addEventListener('load', function(){
-            setTimeout(function(){
-                document.getElementById('main-nav').classList.add('revealed');
-            }, 200);
-        });
+function triggerScrollAnimations(container){
+  container.querySelectorAll('.fade-up,.section-label,.svc-card,.proc-step,.stat-item,.diff-item,.skill-pill').forEach(function(el){
+    // re-observe
+    scrollObs.unobserve(el);
+    scrollObs.observe(el);
+    // if already in view
+    var rect=el.getBoundingClientRect();
+    if(rect.top<window.innerHeight&&rect.bottom>0){
+      setTimeout(function(){el.classList.add('visible');if(el.classList.contains('stat-item'))animateCountUp(el);},50);
+    }
+  });
+  // stagger svc cards
+  container.querySelectorAll('.svc-card').forEach(function(el,i){
+    el.style.transitionDelay=(i*0.07)+'s';
+  });
+  // stagger proc steps
+  container.querySelectorAll('.proc-step').forEach(function(el,i){
+    el.style.transitionDelay=(i*0.1)+'s';
+  });
+  // stagger skill pills
+  container.querySelectorAll('.skill-pill').forEach(function(el,i){
+    el.style.transitionDelay=(i*0.04)+'s';
+  });
+  // stagger diff items
+  container.querySelectorAll('.diff-item').forEach(function(el,i){
+    el.style.transitionDelay=(i*0.12)+'s';
+  });
+  // stagger contact form groups
+  container.querySelectorAll('.cf-group').forEach(function(el,i){
+    el.style.transitionDelay=(i*0.1)+'s';
+    setTimeout(function(){el.classList.add('visible');},200+i*100);
+  });
+  // page-level scroll listener
+  container.removeEventListener('scroll',container._scrollHandler||function(){});
+  container._scrollHandler=function(){
+    container.querySelectorAll('.fade-up,.section-label,.svc-card,.proc-step,.stat-item,.diff-item,.skill-pill').forEach(function(el){
+      var rect=el.getBoundingClientRect();
+      if(rect.top<window.innerHeight*0.9&&rect.bottom>0)el.classList.add('visible');
+    });
+    // nav scroll state
+    document.getElementById('main-nav').classList.toggle('scrolled',container.scrollTop>20);
+  };
+  container.addEventListener('scroll',container._scrollHandler,{passive:true});
+}
 
-        // Scroll animations
-        var observer = new IntersectionObserver(function(entries){
-            entries.forEach(function(entry){
-                if(entry.isIntersecting){ entry.target.classList.add('visible'); }
-            });
-        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+// ── COUNT UP ──
+var counted=new WeakSet();
+function animateCountUp(statEl){
+  if(counted.has(statEl))return;
+  counted.add(statEl);
+  var span=statEl.querySelector('.count-up');
+  if(!span)return;
+  var target=parseInt(span.dataset.target);
+  var duration=1200;var start=null;
+  function step(ts){
+    if(!start)start=ts;
+    var p=Math.min((ts-start)/duration,1);
+    var ease=1-Math.pow(1-p,3);
+    span.textContent=Math.round(ease*target);
+    if(p<1)requestAnimationFrame(step);else span.textContent=target;
+  }
+  requestAnimationFrame(step);
+}
 
-        document.querySelectorAll('.fade-in, .slide-in-left').forEach(function(el){ observer.observe(el); });
-
-        // Character reveal
-        document.querySelectorAll('.char-reveal').forEach(function(el){
-            var text = el.textContent;
-            el.textContent = '';
-            text.split('').forEach(function(char, i){
-                if(char === ' '){
-                    var space = document.createElement('span');
-                    space.className = 'space';
-                    el.appendChild(space);
-                } else {
-                    var span = document.createElement('span');
-                    span.className = 'char';
-                    span.textContent = char;
-                    span.style.transitionDelay = (i * 0.025) + 's';
-                    el.appendChild(span);
-                }
-            });
-            observer.observe(el);
-        });
-
-        // Nav colour switching
-        var nav = document.getElementById('main-nav');
-        var sections = document.querySelectorAll('section[data-nav]');
-        function updateNavColor(){
-            var scrollY = window.scrollY + 60;
-            var current = 'light';
-            sections.forEach(function(section){
-                if(section.offsetTop <= scrollY){ current = section.dataset.nav; }
-            });
-            nav.className = nav.className.replace(/nav-light|nav-dark/g, '').trim();
-            nav.classList.add('nav-' + current);
-            if(nav.classList.contains('revealed') === false && document.readyState === 'complete'){
-                nav.classList.add('revealed');
-            }
+// ── WORK FILTERS ──
+function initWorkFilters(){
+  var cards=Array.from(document.querySelectorAll('.project-card'));
+  cards.forEach(function(c){
+    c.style.animationDelay=(cards.indexOf(c)*0.08)+'s';
+    c.classList.remove('hiding');
+    c.style.display='flex';
+  });
+  document.querySelectorAll('.filter-btn').forEach(function(btn){
+    btn.onclick=function(){
+      document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      var filter=btn.dataset.filter;
+      cards.forEach(function(card,i){
+        if(filter==='all'||card.dataset.category===filter){
+          card.style.display='flex';
+          card.style.animationDelay=(i*0.08)+'s';
+          card.style.animation='none';
+          card.offsetHeight;
+          card.style.animation='cardIn 0.45s var(--ease) forwards';
+        } else {
+          card.classList.add('hiding');
+          setTimeout(function(){card.style.display='none';card.classList.remove('hiding');},260);
         }
-        window.addEventListener('scroll', updateNavColor, { passive: true });
-        updateNavColor();
+      });
+    };
+  });
+}
 
-        // Contact form
-        var form = document.getElementById('contact-form');
-        form.addEventListener('submit', function(e){
-            e.preventDefault();
-            var btn = form.querySelector('.form-submit span');
-            btn.textContent = 'Sending...';
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: { 'Accept': 'application/json' }
-            }).then(function(res){
-                if(res.ok){
-                    form.style.display = 'none';
-                    document.getElementById('form-success').classList.add('show');
-                } else {
-                    btn.textContent = 'Error - try again';
-                    setTimeout(function(){ btn.textContent = 'Send Message'; }, 2000);
-                }
-            }).catch(function(){
-                btn.textContent = 'Error - try again';
-                setTimeout(function(){ btn.textContent = 'Send Message'; }, 2000);
-            });
-        });
+// ── TYPEWRITER ──
+var twEl=document.getElementById('typewriter');
+var twPhrases=['Got an idea?','Need a website?','Building an MVP?','Want to ship something fast?','Have a tool that needs building?'];
+var twIdx=0,twChar=0,twDeleting=false,twTimer=null;
+function startTypewriter(){
+  clearTimeout(twTimer);twChar=0;twIdx=0;twDeleting=false;
+  if(twEl)twEl.textContent='';
+  twStep();
+}
+function twStep(){
+  if(!twEl)return;
+  var phrase=twPhrases[twIdx%twPhrases.length];
+  if(!twDeleting){
+    twEl.textContent=phrase.slice(0,++twChar);
+    if(twChar===phrase.length){twDeleting=true;twTimer=setTimeout(twStep,1800);}
+    else{twTimer=setTimeout(twStep,55+Math.random()*35);}
+  } else {
+    twEl.textContent=phrase.slice(0,--twChar);
+    if(twChar===0){twDeleting=false;twIdx++;twTimer=setTimeout(twStep,400);}
+    else{twTimer=setTimeout(twStep,28);}
+  }
+}
 
-        // Process glyph — changes to match hovered step
-        (function(){
-            var glyph = document.getElementById('proc-glyph');
-            if (!glyph) return;
-            document.querySelectorAll('.process-step').forEach(function(step){
-                step.addEventListener('mouseenter', function(){
-                    glyph.textContent = step.dataset.g || 'i';
-                });
-                step.addEventListener('mouseleave', function(){
-                    glyph.textContent = 'i';
-                });
-            });
-        })();
+// ── CONTACT FORM ──
+var cfForm=document.getElementById('contact-form');
+if(cfForm){
+  cfForm.addEventListener('submit',function(e){
+    e.preventDefault();
+    var btn=document.getElementById('cf-submit-text');
+    btn.textContent='Sending...';
+    document.getElementById('cf-submit').disabled=true;
+    fetch(cfForm.action,{
+      method:'POST',body:new FormData(cfForm),headers:{'Accept':'application/json'}
+    }).then(function(res){
+      if(res.ok){
+        clearTimeout(twTimer);
+        if(twEl)twEl.textContent='';
+        cfForm.style.display='none';
+        document.getElementById('form-success').classList.add('show');
+        fireTileBurst();
+      } else {
+        btn.textContent='Error — try again';
+        document.getElementById('cf-submit').disabled=false;
+        setTimeout(function(){btn.textContent='Send message →';},2500);
+      }
+    }).catch(function(){
+      btn.textContent='Error — try again';
+      document.getElementById('cf-submit').disabled=false;
+      setTimeout(function(){btn.textContent='Send message →';},2500);
+    });
+  });
+}
 
-        // Living mosaic flicker
-        (function(){
-            var tiles = document.querySelectorAll('.hero-bg-tiles .bg-tile');
-            if (!tiles.length) return;
+// ── TILE BURST ──
+function fireTileBurst(){
+  var btn=document.getElementById('cf-submit');
+  if(!btn)return;
+  var rect=btn.getBoundingClientRect();
+  var cx=rect.left+rect.width/2;var cy=rect.top+rect.height/2;
+  for(var i=0;i<18;i++){
+    (function(){
+      var t=document.createElement('div');
+      t.className='burst-tile';
+      var size=6+Math.random()*14;
+      var angle=Math.random()*Math.PI*2;
+      var dist=60+Math.random()*120;
+      var bx=Math.cos(angle)*dist+'px';
+      var by=Math.sin(angle)*dist+'px';
+      t.style.cssText='left:'+cx+'px;top:'+cy+'px;width:'+size+'px;height:'+size+'px;--bx:'+bx+';--by:'+by+';animation-delay:'+(Math.random()*0.15)+'s;animation-duration:'+(0.6+Math.random()*0.4)+'s;';
+      document.body.appendChild(t);
+      setTimeout(function(){t.remove();},1200);
+    })();
+  }
+}
 
-            function flickerTile() {
-                var tile = tiles[Math.floor(Math.random() * tiles.length)];
-                var baseOp = parseFloat(getComputedStyle(tile).opacity) || 0.1;
-                var boost = baseOp + (Math.random() * 0.15) + 0.05;
-                tile.style.transition = 'opacity 0.8s ease';
-                tile.style.opacity = Math.min(boost, 0.45);
-                setTimeout(function(){
-                    tile.style.transition = 'opacity 1.2s ease';
-                    tile.style.opacity = '';
-                }, 800 + Math.random() * 400);
-            }
-
-            // Start flickering after initial tile animations complete
-            setTimeout(function(){
-                setInterval(function(){
-                    flickerTile();
-                    // Occasionally flicker 2 tiles at once
-                    if (Math.random() > 0.6) {
-                        setTimeout(flickerTile, 150);
-                    }
-                }, 600 + Math.random() * 800);
-            }, 2000);
-        })();
-    </script>
-
+// ── NAV SCROLL (home page) ──
+window.addEventListener('scroll',function(){
+  var activePage=document.querySelector('.page.active');
+  if(activePage){
+    document.getElementById('main-nav').classList.toggle('scrolled',activePage.scrollTop>20);
+  }
+},{passive:true});
+</script>
 </body>
 </html>
