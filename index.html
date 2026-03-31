@@ -170,7 +170,7 @@ nav.scrolled{
 
 .hero-bottom{
   display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;
-  opacity:0;animation:fadeUp 0.7s var(--ease) 1.2s forwards;
+  opacity:0;animation:fadeUp 0.7s var(--ease) 1.2s forwards;flex-wrap:wrap;
 }
 .hero-sub{
   max-width:420px;color:var(--muted);font-size:1rem;line-height:1.75;
@@ -497,12 +497,6 @@ nav.scrolled{
 }
 .statement-attr.visible{opacity:1;}
 .statement-attr::before{content:'';width:28px;height:1px;background:var(--dim);}
-.statement-bg-num{
-  position:absolute;right:-0.05em;top:50%;transform:translateY(-50%);
-  font-family:var(--serif);font-size:clamp(12rem,22vw,20rem);
-  color:rgba(255,255,255,0.018);line-height:1;pointer-events:none;
-  user-select:none;letter-spacing:-0.06em;
-}
 
 /* differentiators */
 .diff-section{
@@ -940,7 +934,7 @@ footer a:hover{color:var(--cream);}
 
   <!-- STATEMENT -->
   <section class="about-statement">
-    <div class="statement-bg-num">T</div>
+    
     <p class="statement-quote fade-up">
       Traditional development is <em>slow, expensive, and bloated with process.</em> I built Tesselo to change that — to prove that one person with the right tools can outbuild a team, outpace an agency, and hand you something genuinely yours.
     </p>
