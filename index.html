@@ -134,15 +134,23 @@
         .project-card:hover .project-placeholder { border-color: var(--accent); color: var(--accent); }
 
         /* PROCESS */
-        .process { background: var(--white); }
-        .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 2rem; }
-        .process-step { padding: 2.5rem 2rem; border-left: 1px solid var(--grey-light); transition: background 0.3s ease; }
+        .process { background: var(--white); position: relative; overflow: hidden; }
+        .process-bg-glyph {
+            position: absolute; font-family: var(--font-serif); font-size: 38vw;
+            font-weight: 400; font-style: italic; color: var(--grey-light);
+            opacity: 0.18; line-height: 1; right: 3rem; top: 50%;
+            transform: translateY(-50%); pointer-events: none; user-select: none;
+            letter-spacing: -0.05em; transition: opacity 0.4s ease;
+        }
+        .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 2rem; position: relative; z-index: 1; }
+        .process-step { padding: 2.5rem 2rem; border-left: 1px solid var(--grey-light); transition: background 0.4s ease; position: relative; cursor: default; }
         .process-step:first-child { border-left: none; padding-left: 0; }
         .process-step:hover { background: rgba(196, 67, 26, 0.03); }
-        .step-num { font-family: var(--font-serif); font-size: 0.9rem; color: var(--accent); margin-bottom: 1.5rem; transition: transform 0.3s ease; }
-        .process-step:hover .step-num { transform: translateX(4px); }
+        .step-num { font-family: var(--font-serif); font-size: 0.9rem; color: var(--accent); margin-bottom: 1.5rem; display: inline-block; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), letter-spacing 0.4s ease; }
+        .process-step:hover .step-num { transform: translateX(6px); letter-spacing: 0.05em; }
         .process-step h4 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400; margin-bottom: 0.75rem; }
-        .process-step p { font-size: 0.85rem; color: var(--grey); line-height: 1.6; }
+        .process-step p { font-size: 0.85rem; color: var(--grey); line-height: 1.65; }
+        @media (max-width: 900px) { .process-bg-glyph { display: none; } }
 
         /* CONTACT */
         .contact { background: var(--black); color: var(--white); padding: 8rem 3rem; }
@@ -192,6 +200,58 @@
         .stagger-3 { transition-delay: 0.3s; }
         .stagger-4 { transition-delay: 0.4s; }
 
+        /* CUSTOM CURSOR */
+        body { cursor: none; }
+        .cursor-dot {
+            position: fixed; top: 0; left: 0; z-index: 9999;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent); pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, opacity 0.3s ease;
+            will-change: transform;
+        }
+        .cursor-ring {
+            position: fixed; top: 0; left: 0; z-index: 9998;
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 1px solid rgba(196, 67, 26, 0.5); pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.3s ease;
+            will-change: transform;
+        }
+        .cursor-dot.is-hovering { width: 12px; height: 12px; }
+        .cursor-ring.is-hovering { width: 52px; height: 52px; border-color: var(--accent); }
+        .cursor-dot.is-hidden, .cursor-ring.is-hidden { opacity: 0; }
+        @media (hover: none) {
+            body { cursor: auto; }
+            .cursor-dot, .cursor-ring { display: none; }
+        }
+
+        /* SCROLL INDICATOR */
+        .scroll-indicator {
+            position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+            opacity: 0; animation: fadeUp 0.8s ease 1.4s forwards;
+            z-index: 2;
+        }
+        .scroll-indicator span {
+            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.25em;
+            color: rgba(245,242,238,0.35); font-family: var(--font-sans); font-weight: 400;
+        }
+        .scroll-track {
+            width: 1px; height: 52px; background: rgba(245,242,238,0.12);
+            position: relative; overflow: hidden;
+        }
+        .scroll-thumb {
+            position: absolute; top: 0; left: 0; width: 100%;
+            background: var(--accent);
+            animation: scrollThumb 1.8s cubic-bezier(0.4, 0, 0.2, 1) 1.6s infinite;
+        }
+        @keyframes scrollThumb {
+            0%   { height: 0%;   top: 0%; opacity: 1; }
+            50%  { height: 60%;  top: 20%; opacity: 1; }
+            100% { height: 0%;   top: 100%; opacity: 0; }
+        }
+
         /* RESPONSIVE */
         @media (max-width: 900px) {
             nav { padding: 1.25rem 1.5rem; }
@@ -218,6 +278,10 @@
     </style>
 </head>
 <body>
+
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
 
     <nav id="main-nav" class="nav-light">
         <a href="#" class="logo">
@@ -312,9 +376,11 @@
                 <span class="hero-tag">AI-Assisted Development Studio</span>
             </div>
         </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-track"><div class="scroll-thumb"></div></div>
+        </div>
     </section>
-
-    <section class="services" id="services" data-nav="dark">
         <div class="section-label fade-in">What I build</div>
         <div class="services-grid">
             <div class="service-card fade-in stagger-1">
@@ -382,24 +448,25 @@
     </section>
 
     <section class="process" id="process" data-nav="dark">
+        <div class="process-bg-glyph" id="proc-glyph">i</div>
         <div class="section-label fade-in">How it works</div>
         <div class="process-steps">
-            <div class="process-step fade-in stagger-1">
+            <div class="process-step fade-in stagger-1" data-g="i">
                 <div class="step-num">i</div>
                 <h4 class="char-reveal">Discovery</h4>
                 <p>We talk through what you need, who it's for, and what success looks like. No jargon, no fluff.</p>
             </div>
-            <div class="process-step fade-in stagger-2">
+            <div class="process-step fade-in stagger-2" data-g="ii">
                 <div class="step-num">ii</div>
                 <h4 class="char-reveal">Build</h4>
                 <p>I build fast using AI-assisted development. You see working progress within days, not weeks. Real code, real product.</p>
             </div>
-            <div class="process-step fade-in stagger-3">
+            <div class="process-step fade-in stagger-3" data-g="iii">
                 <div class="step-num">iii</div>
                 <h4 class="char-reveal">Iterate</h4>
                 <p>You test, you feedback, I refine. Tight loops until it's right. No long disappearances &#8212; you're involved throughout.</p>
             </div>
-            <div class="process-step fade-in stagger-4">
+            <div class="process-step fade-in stagger-4" data-g="iv">
                 <div class="step-num">iv</div>
                 <h4 class="char-reveal">Ship</h4>
                 <p>Deployed, documented, and handed over. You own everything. I stick around if you need ongoing support.</p>
@@ -460,6 +527,63 @@
     </footer>
 
     <script>
+        // Custom cursor
+        (function(){
+            var dot = document.getElementById('cursor-dot');
+            var ring = document.getElementById('cursor-ring');
+            if (!dot || !ring) return;
+            var mx = 0, my = 0, rx = 0, ry = 0;
+            var hidden = true;
+
+            document.addEventListener('mousemove', function(e){
+                mx = e.clientX; my = e.clientY;
+                dot.style.left = mx + 'px';
+                dot.style.top  = my + 'px';
+                if (hidden) {
+                    dot.classList.remove('is-hidden');
+                    ring.classList.remove('is-hidden');
+                    hidden = false;
+                }
+            });
+            document.addEventListener('mouseleave', function(){
+                dot.classList.add('is-hidden');
+                ring.classList.add('is-hidden');
+                hidden = true;
+            });
+
+            // Smooth-follow ring
+            (function animateRing(){
+                rx += (mx - rx) * 0.1;
+                ry += (my - ry) * 0.1;
+                ring.style.left = rx + 'px';
+                ring.style.top  = ry + 'px';
+                requestAnimationFrame(animateRing);
+            })();
+
+            // Hover state on interactive elements
+            var hoverEls = 'a, button, .service-card, .project-card, .process-step';
+            document.querySelectorAll(hoverEls).forEach(function(el){
+                el.addEventListener('mouseenter', function(){
+                    dot.classList.add('is-hovering');
+                    ring.classList.add('is-hovering');
+                });
+                el.addEventListener('mouseleave', function(){
+                    dot.classList.remove('is-hovering');
+                    ring.classList.remove('is-hovering');
+                });
+            });
+
+            // Hide scroll indicator once user scrolls
+            var scrollInd = document.querySelector('.scroll-indicator');
+            if (scrollInd) {
+                window.addEventListener('scroll', function(){
+                    if (window.scrollY > 80) {
+                        scrollInd.style.opacity = Math.max(0, 1 - (window.scrollY - 80) / 80) + '';
+                    }
+                }, { passive: true });
+            }
+        })();
+
         // Email built via JS to prevent Cloudflare email obfuscation
         (function(){
             var e = ['hello','tesselo','dev'];
@@ -546,6 +670,20 @@
                 setTimeout(function(){ btn.textContent = 'Send Message'; }, 2000);
             });
         });
+
+        // Process glyph — changes to match hovered step
+        (function(){
+            var glyph = document.getElementById('proc-glyph');
+            if (!glyph) return;
+            document.querySelectorAll('.process-step').forEach(function(step){
+                step.addEventListener('mouseenter', function(){
+                    glyph.textContent = step.dataset.g || 'i';
+                });
+                step.addEventListener('mouseleave', function(){
+                    glyph.textContent = 'i';
+                });
+            });
+        })();
 
         // Living mosaic flicker
         (function(){
