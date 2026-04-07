@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map Studio — Tesselo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: #0a0a0a; color: #f0ece4; overflow: hidden; }
+:root { --accent: #c4431a; --ease: cubic-bezier(0.22, 1, 0.36, 1); }
+
+#app { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+
+#sidebar {
+  background: #0f0f0f;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  display: flex; flex-direction: column;
+  position: relative; z-index: 10;
+  overflow-y: auto; overflow-x: visible;
+}
+
+#sidebar-header { padding: 22px 22px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.logo { font-family: 'Instrument Serif', serif; font-size: 21px; letter-spacing: -0.02em; color: #f0ece4; }
+.logo span { color: var(--accent); }
+.logo-sub { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(240,236,228,0.3); font-family: 'DM Mono', monospace; margin-top: 2px; }
+
+#search-wrap { padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.section-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(240,236,228,0.3); font-family: 'DM Mono', monospace; margin-bottom: 8px; display: block; }
+#search-row { display: flex; gap: 7px; }
+#location-input {
+  flex: 1; min-width: 0;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 7px; padding: 9px 12px;
+  color: #f0ece4; font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
+  transition: border-color 0.2s;
+}
+#location-input::placeholder { color: rgba(240,236,228,0.22); }
+#location-input:focus { border-color: rgba(196,67,26,0.55); }
+#search-btn {
+  background: var(--accent); border: none; border-radius: 7px;
+  padding: 9px 13px; color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500; cursor: pointer; flex-shrink: 0;
+  transition: opacity 0.15s, transform 0.1s;
+}
+#search-btn:hover { opacity: 0.85; }
+#search-btn:active { transform: scale(0.96); }
+
+#themes-wrap { padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+#theme-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+.theme-swatch {
+  aspect-ratio: 1; border-radius: 5px; cursor: pointer;
+  border: 2px solid transparent; overflow: hidden;
+  transition: transform 0.15s var(--ease), border-color 0.15s;
+}
+.theme-swatch:hover { transform: scale(1.1); }
+.theme-swatch.active { border-color: #f0ece4; transform: scale(1.1); }
+.swatch-inner { width: 100%; height: 100%; display: flex; flex-direction: column; }
+.sw-land { flex: 3; }
+.sw-road { height: 3px; }
+.sw-water { flex: 1.5; }
+
+#location-info { padding: 14px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+#city-display { font-family: 'Instrument Serif', serif; font-size: 26px; letter-spacing: -0.02em; line-height: 1.1; }
+#coords-display { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(240,236,228,0.3); margin-top: 4px; letter-spacing: 0.05em; }
+#theme-name-display { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; margin-top: 7px; }
+
+#layers-wrap { padding: 14px 22px; }
+.layer-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; cursor: pointer; }
+.layer-label { font-size: 12px; color: rgba(240,236,228,0.55); font-family: 'DM Mono', monospace; }
+.tog { width: 30px; height: 17px; border-radius: 9px; background: rgba(255,255,255,0.1); position: relative; transition: background 0.2s; flex-shrink: 0; }
+.tog.on { background: var(--accent); }
+.tog::after { content: ''; position: absolute; width: 11px; height: 11px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform 0.18s var(--ease); }
+.tog.on::after { transform: translateX(13px); }
+
+#sidebar-footer { margin-top: auto; padding: 12px 22px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10px; color: rgba(240,236,228,0.2); font-family: 'DM Mono', monospace; display: flex; align-items: center; justify-content: space-between; }
+#sidebar-footer a { color: rgba(240,236,228,0.3); text-decoration: none; }
+#sidebar-footer a:hover { color: rgba(240,236,228,0.6); }
+
+#map-wrap { position: relative; overflow: hidden; }
+#map { width: 100%; height: 100%; }
+
+#map-loader { position: absolute; inset: 0; background: rgba(10,10,10,0.5); display: flex; align-items: center; justify-content: center; z-index: 5; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+#map-loader.on { opacity: 1; pointer-events: auto; }
+.spin { width: 32px; height: 32px; border: 2px solid rgba(240,236,228,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.75s linear infinite; }
+
+#map-badge { position: absolute; bottom: 18px; left: 18px; background: rgba(10,10,10,0.75); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 9px 13px; z-index: 5; }
+#badge-city { font-family: 'Instrument Serif', serif; font-size: 14px; color: #f0ece4; }
+#badge-coords { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(240,236,228,0.35); margin-top: 2px; }
+
+/* Autocomplete — lives on body, nothing can clip it */
+#autocomplete {
+  position: fixed; z-index: 999999; display: none;
+  background: #1d1d1d;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+  max-height: 260px; overflow-y: auto;
+}
+.ac-item { padding: 10px 13px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.1s; }
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover { background: rgba(196,67,26,0.18); }
+.ac-name { font-size: 13px; font-weight: 500; color: #f0ece4; }
+.ac-detail { font-size: 11px; color: rgba(240,236,228,0.4); margin-top: 2px; }
+
+#toast { position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-70px); background: #1d1d1d; border: 1px solid rgba(255,255,255,0.1); border-radius: 7px; padding: 9px 16px; font-size: 12px; font-family: 'DM Mono', monospace; color: rgba(240,236,228,0.7); z-index: 99999; transition: transform 0.3s var(--ease); pointer-events: none; white-space: nowrap; }
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+.maplibregl-ctrl-group { background: rgba(15,15,15,0.9) !important; border: 1px solid rgba(255,255,255,0.08) !important; border-radius: 7px !important; }
+.maplibregl-ctrl-icon { filter: invert(1) opacity(0.5); }
+.maplibregl-ctrl-logo { display: none !important; }
+.maplibregl-ctrl-attrib { background: rgba(0,0,0,0.5) !important; font-size: 10px !important; border-radius: 4px !important; }
+.maplibregl-ctrl-attrib a { color: rgba(255,255,255,0.4) !important; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 680px) { #app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } #sidebar { max-height: 45vh; } #theme-grid { grid-template-columns: repeat(9,1fr); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <aside id="sidebar">
+    <div id="sidebar-header">
+      <div class="logo">Map<span>Studio</span></div>
+      <div class="logo-sub">by Tesselo</div>
+    </div>
+    <div id="search-wrap">
+      <span class="section-label">Location</span>
+      <div id="search-row">
+        <input id="location-input" type="text" placeholder="Search any place…" autocomplete="off" spellcheck="false" />
+        <button id="search-btn">Go</button>
+      </div>
+    </div>
+    <div id="themes-wrap">
+      <span class="section-label">Theme</span>
+      <div id="theme-grid"></div>
+    </div>
+    <div id="location-info">
+      <div id="city-display">Dartford</div>
+      <div id="coords-display">51.4443° N / 0.2181° E</div>
+      <div id="theme-name-display">Blueprint</div>
+    </div>
+    <div id="layers-wrap">
+      <span class="section-label">Layers</span>
+      <div class="layer-row" id="lr-buildings"><span class="layer-label">Buildings</span><div class="tog on" id="tog-buildings"></div></div>
+      <div class="layer-row" id="lr-water"><span class="layer-label">Water</span><div class="tog on" id="tog-water"></div></div>
+      <div class="layer-row" id="lr-parks"><span class="layer-label">Parks</span><div class="tog on" id="tog-parks"></div></div>
+      <div class="layer-row" id="lr-rail"><span class="layer-label">Railways</span><div class="tog on" id="tog-rail"></div></div>
+    </div>
+    <div id="sidebar-footer">
+      <span>OpenFreeMap &middot; OSM</span>
+      <a href="https://tesselo.dev" target="_blank">Designed &amp; Built by Tesselo</a>
+    </div>
+  </aside>
+  <div id="map-wrap">
+    <div id="map"></div>
+    <div id="map-loader"><div class="spin"></div></div>
+    <div id="map-badge">
+      <div id="badge-city">Dartford, United Kingdom</div>
+      <div id="badge-coords">51.4443° N &middot; 0.2181° E</div>
+    </div>
+  </div>
+</div>
+
+<!-- These live on body — never clipped by sidebar overflow -->
+<div id="autocomplete"></div>
+<div id="toast"></div>
+
+<script>
+var THEMES = {
+  blueprint:  { name:'Blueprint',  map:{ land:'#1A3A5C', water:'#0E2740', waterway:'#0E2740', parks:'#1F466F', buildings:'#6EA4CC', rail:'#e8f4ff', roads:{ major:'#D8EEFA', hi:'#7AAED0', mid:'#435f7d', lo:'#375473', path:'#526c88', outline:'#607993' }}},
+  midnight:   { name:'Midnight',   map:{ land:'#0A1628', water:'#061020', waterway:'#061020', parks:'#0F2235', buildings:'#6E5A45', rail:'#d6b352', roads:{ major:'#C99C37', hi:'#8A6820',  mid:'#333530', lo:'#272c2e', path:'#414033', outline:'#4f4b36' }}},
+  neon:       { name:'Neon',       map:{ land:'#0B0F1A', water:'#001433', waterway:'#002044', parks:'#1A0B2A', buildings:'#FF2D95', rail:'#00F5FF', roads:{ major:'#FF2D95', hi:'#FF6EB4',  mid:'#8A33FF', lo:'#4A0099', path:'#21203A', outline:'#0B0F1A' }}},
+  noir:       { name:'Noir',       map:{ land:'#111111', water:'#050505', waterway:'#070707', parks:'#1a1a1a', buildings:'#2e2e2e', rail:'#666666', roads:{ major:'#CCCCCC', hi:'#888888',  mid:'#444444', lo:'#2a2a2a', path:'#333333', outline:'#444444' }}},
+  heatwave:   { name:'Heatwave',   map:{ land:'#1C0E09', water:'#2C140C', waterway:'#2C140C', parks:'#381A10', buildings:'#D2A55E', rail:'#ffd78a', roads:{ major:'#FF5F1F', hi:'#B04010',  mid:'#493623', lo:'#3c2a1b', path:'#59442c', outline:'#695235' }}},
+  ruby:       { name:'Ruby',       map:{ land:'#1A070F', water:'#2A0D17', waterway:'#2A0D17', parks:'#351021', buildings:'#EE8EA4', rail:'#f6d7bc', roads:{ major:'#C0103C', hi:'#780C2C',  mid:'#463132', lo:'#392427', path:'#553f3e', outline:'#654e4a' }}},
+  ocean:      { name:'Ocean',      map:{ land:'#E8F4F8', water:'#7EC8D8', waterway:'#7EC8D8', parks:'#D0EAE0', buildings:'#A8C8D8', rail:'#2a6a7a', roads:{ major:'#2A6A8A', hi:'#4A8AA8',  mid:'#A0C4D4', lo:'#B8D0DC', path:'#B8D8E8', outline:'#C8E0E8' }}},
+  sage:       { name:'Sage',       map:{ land:'#DDE8DD', water:'#C5D4CB', waterway:'#C5D4CB', parks:'#D3DFD7', buildings:'#8BAD9B', rail:'#2d4739', roads:{ major:'#3F624F', hi:'#587A68',  mid:'#92B4A2', lo:'#AABFB4', path:'#BECCBF', outline:'#C8D8CC' }}},
+  coral:      { name:'Coral',      map:{ land:'#F3E1DA', water:'#DFC0B5', waterway:'#DFC0B5', parks:'#EACFC6', buildings:'#E39B89', rail:'#6e2f28', roads:{ major:'#B9473A', hi:'#C86050',  mid:'#E09888', lo:'#DDAA9A', path:'#E8C4B8', outline:'#EDD2C8' }}},
+  terracotta: { name:'Terra',      map:{ land:'#F5EDE4', water:'#A8C4C4', waterway:'#A8C4C4', parks:'#E8E0D0', buildings:'#D9A08A', rail:'#8b4513', roads:{ major:'#A0522D', hi:'#C07048',  mid:'#DCA882', lo:'#D8B898', path:'#E4C8B0', outline:'#EAD4C0' }}},
+  copper:     { name:'Copper',     map:{ land:'#E1D2C6', water:'#CBB5A1', waterway:'#CBB5A1', parks:'#D8C6B5', buildings:'#C88B72', rail:'#4e2f22', roads:{ major:'#7C452E', hi:'#9E5A3C',  mid:'#C49078', lo:'#C8A890', path:'#CEBAA6', outline:'#D4C2AE' }}},
+  contrast:   { name:'Contrast',   map:{ land:'#FFFFFF', water:'#B0B0B0', waterway:'#B0B0B0', parks:'#ECECEC', buildings:'#6C6C6C', rail:'#111111', roads:{ major:'#1A1A1A', hi:'#484848',  mid:'#989898', lo:'#B8B8B8', path:'#CCCCCC', outline:'#D8D8D8' }}},
+};
+
+var layers = { buildings:true, water:true, parks:true, rail:true };
+var currentTheme = 'blueprint';
+var currentLocation = { lat:51.4443, lng:0.2181, name:'Dartford', country:'United Kingdom' };
+var map = null;
+
+function iw(stops) {
+  var f = ['interpolate',['linear'],['zoom']];
+  for (var i=0;i<stops.length;i++) f.push(stops[i][0], stops[i][1]);
+  return f;
+}
+function vis(k) { return layers[k] ? 'visible' : 'none'; }
+function lf(classes) {
+  return ['all',['match',['geometry-type'],['LineString','MultiLineString'],true,false],['match',['get','class'],classes,true,false]];
+}
+
+function buildStyle(k) {
+  var t = THEMES[k].map, r = t.roads;
+  return {
+    version: 8,
+    sources: { ofm: { type:'vector', url:'https://tiles.openfreemap.org/planet', maxzoom:14 } },
+    layers: [
+      { id:'bg',       type:'background', paint:{'background-color':t.land} },
+      { id:'park',     source:'ofm','source-layer':'park',           type:'fill', layout:{visibility:vis('parks')}, paint:{'fill-color':t.parks} },
+      { id:'water',    source:'ofm','source-layer':'water',          type:'fill', layout:{visibility:vis('water')}, paint:{'fill-color':t.water} },
+      { id:'waterway', source:'ofm','source-layer':'waterway',       type:'line', layout:{visibility:vis('water'),'line-cap':'round','line-join':'round'}, paint:{'line-color':t.waterway,'line-width':iw([[6,0.5],[14,2]])} },
+      { id:'building', source:'ofm','source-layer':'building',       type:'fill', minzoom:8, layout:{visibility:vis('buildings')}, paint:{'fill-color':t.buildings,'fill-opacity':0.85} },
+      { id:'rail',     source:'ofm','source-layer':'transportation', type:'line', filter:lf(['rail','transit']), layout:{visibility:vis('rail'),'line-cap':'round'}, paint:{'line-color':t.rail,'line-width':iw([[3,0.4],[14,1.5]]),'line-dasharray':[2,1.6],'line-opacity':0.65} },
+      { id:'rov',      source:'ofm','source-layer':'transportation', type:'line', minzoom:0, maxzoom:11.8, filter:lf(['primary','secondary','trunk']), layout:{'line-cap':'round'}, paint:{'line-color':r.hi,'line-width':iw([[0,0.1],[8,0.3],[11,0.5]])} },
+      { id:'rmajc',    source:'ofm','source-layer':'transportation', type:'line', filter:lf(['motorway']), layout:{'line-cap':'round'}, paint:{'line-color':r.outline,'line-width':iw([[0,0.5],[9,1.5],[18,4.5]])} },
+      { id:'rhi',      source:'ofm','source-layer':'transportation', type:'line', minzoom:6, filter:lf(['primary','secondary','trunk','trunk_link','motorway_link']), layout:{'line-cap':'round'}, paint:{'line-color':r.hi,'line-width':iw([[6,0.5],[14,1.5],[18,2.7]])} },
+      { id:'rmid',     source:'ofm','source-layer':'transportation', type:'line', minzoom:6, filter:lf(['tertiary','tertiary_link','minor']), layout:{'line-cap':'round'}, paint:{'line-color':r.mid,'line-width':iw([[6,0.3],[14,1.2],[18,2.3]])} },
+      { id:'rlo',      source:'ofm','source-layer':'transportation', type:'line', minzoom:6, filter:lf(['residential','living_street','unclassified','service']), layout:{'line-cap':'round'}, paint:{'line-color':r.lo,'line-width':iw([[6,0.2],[14,0.9],[18,1.7]]),'line-opacity':0.6} },
+      { id:'rmaj',     source:'ofm','source-layer':'transportation', type:'line', filter:lf(['motorway']), layout:{'line-cap':'round'}, paint:{'line-color':r.major,'line-width':iw([[0,0.4],[9,1.1],[18,3.3]])} },
+    ]
+  };
+}
+
+function initMap() {
+  map = new maplibregl.Map({ container:'map', style:buildStyle('blueprint'), center:[0.2181,51.4443], zoom:12, attributionControl:false });
+  map.addControl(new maplibregl.AttributionControl({compact:true}), 'bottom-right');
+  map.addControl(new maplibregl.NavigationControl({showCompass:true,showZoom:true}), 'top-right');
+  // Show spinner on initial load only
+  document.getElementById('map-loader').classList.add('on');
+  map.once('load', function(){ document.getElementById('map-loader').classList.remove('on'); });
+}
+
+function applyTheme(k) {
+  if (!THEMES[k] || k === currentTheme) return;
+  currentTheme = k;
+  document.getElementById('map-loader').classList.add('on');
+  map.setStyle(buildStyle(k));
+  map.once('style.load', function(){
+    document.getElementById('map-loader').classList.remove('on');
+    // Re-apply any layer visibility toggles after style reload
+    if (typeof LAYER_MAP !== 'undefined') {
+      Object.keys(LAYER_MAP).forEach(function(layer) {
+        var v = layers[layer] ? 'visible' : 'none';
+        LAYER_MAP[layer].forEach(function(id) {
+          if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', v);
+        });
+      });
+    }
+  });
+  document.getElementById('theme-name-display').textContent = THEMES[k].name;
+  document.querySelectorAll('.theme-swatch').forEach(function(s){ s.classList.toggle('active', s.dataset.theme===k); });
+}
+
+function buildSwatches() {
+  var grid = document.getElementById('theme-grid');
+  Object.keys(THEMES).forEach(function(k) {
+    var t = THEMES[k], el = document.createElement('div');
+    el.className = 'theme-swatch' + (k==='blueprint'?' active':'');
+    el.dataset.theme = k;
+    el.title = t.name;
+    el.innerHTML = '<div class="swatch-inner"><div class="sw-land" style="background:'+t.map.land+'"></div><div class="sw-road" style="background:'+t.map.roads.major+'"></div><div class="sw-water" style="background:'+t.map.water+'"></div></div>';
+    el.addEventListener('click', function(){ applyTheme(k); });
+    grid.appendChild(el);
+  });
+}
+
+// Layer id mapping to map layer ids
+var LAYER_MAP = {
+  buildings: ['building'],
+  water:     ['water', 'waterway'],
+  parks:     ['park'],
+  rail:      ['rail']
+};
+
+['buildings','water','parks','rail'].forEach(function(layer) {
+  document.getElementById('lr-'+layer).addEventListener('click', function() {
+    layers[layer] = !layers[layer];
+    document.getElementById('tog-'+layer).classList.toggle('on', layers[layer]);
+    var v = layers[layer] ? 'visible' : 'none';
+    LAYER_MAP[layer].forEach(function(id) {
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', v);
+    });
+  });
+});
+
+/* ── CITIES ── */
+var CITIES = [
+  {n:'London',c:'United Kingdom',lat:51.5074,lng:-0.1278},{n:'Dartford',c:'United Kingdom',lat:51.4443,lng:0.2181},
+  {n:'Manchester',c:'United Kingdom',lat:53.4808,lng:-2.2426},{n:'Birmingham',c:'United Kingdom',lat:52.4862,lng:-1.8904},
+  {n:'Edinburgh',c:'United Kingdom',lat:55.9533,lng:-3.1883},{n:'Glasgow',c:'United Kingdom',lat:55.8642,lng:-4.2518},
+  {n:'Bristol',c:'United Kingdom',lat:51.4545,lng:-2.5879},{n:'Leeds',c:'United Kingdom',lat:53.8008,lng:-1.5491},
+  {n:'Liverpool',c:'United Kingdom',lat:53.4084,lng:-2.9916},{n:'Sheffield',c:'United Kingdom',lat:53.3811,lng:-1.4701},
+  {n:'Newcastle',c:'United Kingdom',lat:54.9783,lng:-1.6178},{n:'Nottingham',c:'United Kingdom',lat:52.9548,lng:-1.1581},
+  {n:'Oxford',c:'United Kingdom',lat:51.7520,lng:-1.2577},{n:'Cambridge',c:'United Kingdom',lat:52.2053,lng:0.1218},
+  {n:'Brighton',c:'United Kingdom',lat:50.8225,lng:-0.1372},{n:'Cardiff',c:'United Kingdom',lat:51.4816,lng:-3.1791},
+  {n:'Belfast',c:'United Kingdom',lat:54.5973,lng:-5.9301},{n:'Bath',c:'United Kingdom',lat:51.3811,lng:-2.3590},
+  {n:'Canterbury',c:'United Kingdom',lat:51.2802,lng:1.0789},{n:'York',c:'United Kingdom',lat:53.9590,lng:-1.0815},
+  {n:'Leicester',c:'United Kingdom',lat:52.6369,lng:-1.1398},{n:'Coventry',c:'United Kingdom',lat:52.4068,lng:-1.5197},
+  {n:'Bradford',c:'United Kingdom',lat:53.7960,lng:-1.7594},{n:'Plymouth',c:'United Kingdom',lat:50.3755,lng:-4.1427},
+  {n:'Southampton',c:'United Kingdom',lat:50.9097,lng:-1.4044},{n:'Portsmouth',c:'United Kingdom',lat:50.8198,lng:-1.0880},
+  {n:'Reading',c:'United Kingdom',lat:51.4543,lng:-0.9781},{n:'Derby',c:'United Kingdom',lat:52.9225,lng:-1.4746},
+  {n:'Wolverhampton',c:'United Kingdom',lat:52.5862,lng:-2.1283},{n:'Swansea',c:'United Kingdom',lat:51.6214,lng:-3.9436},
+  {n:'Exeter',c:'United Kingdom',lat:50.7236,lng:-3.5275},{n:'Northampton',c:'United Kingdom',lat:52.2405,lng:-0.9027},
+  {n:'Luton',c:'United Kingdom',lat:51.8787,lng:-0.4200},{n:'Swindon',c:'United Kingdom',lat:51.5558,lng:-1.7797},
+  {n:'Milton Keynes',c:'United Kingdom',lat:52.0406,lng:-0.7594},{n:'Bournemouth',c:'United Kingdom',lat:50.7192,lng:-1.8808},
+  {n:'Norwich',c:'United Kingdom',lat:52.6309,lng:1.2974},{n:'Ipswich',c:'United Kingdom',lat:52.0567,lng:1.1482},
+  {n:'Chelmsford',c:'United Kingdom',lat:51.7361,lng:0.4798},{n:'Colchester',c:'United Kingdom',lat:51.8959,lng:0.8919},
+  {n:'Basildon',c:'United Kingdom',lat:51.5756,lng:0.4884},{n:'Southend-on-Sea',c:'United Kingdom',lat:51.5361,lng:0.7136},
+  {n:'Gravesend',c:'United Kingdom',lat:51.4415,lng:0.3685},{n:'Chatham',c:'United Kingdom',lat:51.3799,lng:0.5248},
+  {n:'Maidstone',c:'United Kingdom',lat:51.2720,lng:0.5290},{n:'Rochester',c:'United Kingdom',lat:51.3886,lng:0.5039},
+  {n:'Gillingham',c:'United Kingdom',lat:51.3853,lng:0.5508},{n:'Sevenoaks',c:'United Kingdom',lat:51.2728,lng:0.1878},
+  {n:'Tonbridge',c:'United Kingdom',lat:51.1951,lng:0.2743},{n:'Tunbridge Wells',c:'United Kingdom',lat:51.1323,lng:0.2630},
+  {n:'Dover',c:'United Kingdom',lat:51.1279,lng:1.3134},{n:'Folkestone',c:'United Kingdom',lat:51.0814,lng:1.1660},
+  {n:'Margate',c:'United Kingdom',lat:51.3813,lng:1.3862},{n:'Bromley',c:'United Kingdom',lat:51.4059,lng:0.0147},
+  {n:'Croydon',c:'United Kingdom',lat:51.3762,lng:-0.0982},{n:'Orpington',c:'United Kingdom',lat:51.3741,lng:0.0993},
+  {n:'Bexleyheath',c:'United Kingdom',lat:51.4579,lng:0.1385},{n:'Sidcup',c:'United Kingdom',lat:51.4282,lng:0.1027},
+  {n:'Erith',c:'United Kingdom',lat:51.4820,lng:0.1770},{n:'Woolwich',c:'United Kingdom',lat:51.4915,lng:0.0631},
+  {n:'Greenwich',c:'United Kingdom',lat:51.4826,lng:-0.0077},{n:'Canary Wharf',c:'United Kingdom',lat:51.5054,lng:-0.0235},
+  {n:'Stratford',c:'United Kingdom',lat:51.5423,lng:0.0026},{n:'Wembley',c:'United Kingdom',lat:51.5528,lng:-0.2979},
+  {n:'Harrow',c:'United Kingdom',lat:51.5836,lng:-0.3419},{n:'Watford',c:'United Kingdom',lat:51.6565,lng:-0.3903},
+  {n:'St Albans',c:'United Kingdom',lat:51.7455,lng:-0.3357},{n:'Stevenage',c:'United Kingdom',lat:51.9023,lng:-0.2043},
+  {n:'Harlow',c:'United Kingdom',lat:51.7782,lng:0.1420},{n:'Slough',c:'United Kingdom',lat:51.5105,lng:-0.5950},
+  {n:'Guildford',c:'United Kingdom',lat:51.2362,lng:-0.5704},{n:'Basingstoke',c:'United Kingdom',lat:51.2667,lng:-1.0876},
+  {n:'Gloucester',c:'United Kingdom',lat:51.8642,lng:-2.2380},{n:'Worcester',c:'United Kingdom',lat:52.1920,lng:-2.2200},
+  {n:'Stoke-on-Trent',c:'United Kingdom',lat:53.0027,lng:-2.1794},{n:'Peterborough',c:'United Kingdom',lat:52.5695,lng:-0.2405},
+  {n:'Paris',c:'France',lat:48.8566,lng:2.3522},{n:'Marseille',c:'France',lat:43.2965,lng:5.3698},
+  {n:'Lyon',c:'France',lat:45.7640,lng:4.8357},{n:'Nice',c:'France',lat:43.7102,lng:7.2620},
+  {n:'Berlin',c:'Germany',lat:52.5200,lng:13.4050},{n:'Hamburg',c:'Germany',lat:53.5753,lng:10.0153},
+  {n:'Munich',c:'Germany',lat:48.1351,lng:11.5820},{n:'Cologne',c:'Germany',lat:50.9333,lng:6.9500},
+  {n:'Frankfurt',c:'Germany',lat:50.1109,lng:8.6821},{n:'Amsterdam',c:'Netherlands',lat:52.3676,lng:4.9041},
+  {n:'Rotterdam',c:'Netherlands',lat:51.9244,lng:4.4777},{n:'Barcelona',c:'Spain',lat:41.3851,lng:2.1734},
+  {n:'Madrid',c:'Spain',lat:40.4168,lng:-3.7038},{n:'Valencia',c:'Spain',lat:39.4699,lng:-0.3763},
+  {n:'Seville',c:'Spain',lat:37.3891,lng:-5.9845},{n:'Rome',c:'Italy',lat:41.9028,lng:12.4964},
+  {n:'Milan',c:'Italy',lat:45.4654,lng:9.1859},{n:'Naples',c:'Italy',lat:40.8518,lng:14.2681},
+  {n:'Florence',c:'Italy',lat:43.7696,lng:11.2558},{n:'Venice',c:'Italy',lat:45.4408,lng:12.3155},
+  {n:'Vienna',c:'Austria',lat:48.2082,lng:16.3738},{n:'Prague',c:'Czech Republic',lat:50.0755,lng:14.4378},
+  {n:'Budapest',c:'Hungary',lat:47.4979,lng:19.0402},{n:'Lisbon',c:'Portugal',lat:38.7169,lng:-9.1395},
+  {n:'Porto',c:'Portugal',lat:41.1579,lng:-8.6291},{n:'Athens',c:'Greece',lat:37.9838,lng:23.7275},
+  {n:'Stockholm',c:'Sweden',lat:59.3293,lng:18.0686},{n:'Copenhagen',c:'Denmark',lat:55.6761,lng:12.5683},
+  {n:'Oslo',c:'Norway',lat:59.9139,lng:10.7522},{n:'Helsinki',c:'Finland',lat:60.1699,lng:24.9384},
+  {n:'Warsaw',c:'Poland',lat:52.2297,lng:21.0122},{n:'Krakow',c:'Poland',lat:50.0647,lng:19.9450},
+  {n:'Brussels',c:'Belgium',lat:50.8503,lng:4.3517},{n:'Zurich',c:'Switzerland',lat:47.3769,lng:8.5417},
+  {n:'Geneva',c:'Switzerland',lat:46.2044,lng:6.1432},{n:'Dublin',c:'Ireland',lat:53.3498,lng:-6.2603},
+  {n:'Reykjavik',c:'Iceland',lat:64.1265,lng:-21.8174},{n:'Tallinn',c:'Estonia',lat:59.4370,lng:24.7536},
+  {n:'Riga',c:'Latvia',lat:56.9496,lng:24.1052},{n:'Vilnius',c:'Lithuania',lat:54.6872,lng:25.2797},
+  {n:'Bucharest',c:'Romania',lat:44.4268,lng:26.1025},{n:'Sofia',c:'Bulgaria',lat:42.6977,lng:23.3219},
+  {n:'Zagreb',c:'Croatia',lat:45.8150,lng:15.9819},{n:'Belgrade',c:'Serbia',lat:44.7866,lng:20.4489},
+  {n:'Kyiv',c:'Ukraine',lat:50.4501,lng:30.5234},{n:'Moscow',c:'Russia',lat:55.7558,lng:37.6173},
+  {n:'St Petersburg',c:'Russia',lat:59.9311,lng:30.3609},{n:'Istanbul',c:'Turkey',lat:41.0082,lng:28.9784},
+  {n:'Ankara',c:'Turkey',lat:39.9334,lng:32.8597},{n:'New York',c:'United States',lat:40.7128,lng:-74.0060},
+  {n:'Los Angeles',c:'United States',lat:34.0522,lng:-118.2437},{n:'Chicago',c:'United States',lat:41.8781,lng:-87.6298},
+  {n:'Houston',c:'United States',lat:29.7604,lng:-95.3698},{n:'Phoenix',c:'United States',lat:33.4484,lng:-112.0740},
+  {n:'Philadelphia',c:'United States',lat:39.9526,lng:-75.1652},{n:'San Antonio',c:'United States',lat:29.4241,lng:-98.4936},
+  {n:'San Diego',c:'United States',lat:32.7157,lng:-117.1611},{n:'Dallas',c:'United States',lat:32.7767,lng:-96.7970},
+  {n:'San Francisco',c:'United States',lat:37.7749,lng:-122.4194},{n:'Seattle',c:'United States',lat:47.6062,lng:-122.3321},
+  {n:'Denver',c:'United States',lat:39.7392,lng:-104.9903},{n:'Washington DC',c:'United States',lat:38.9072,lng:-77.0369},
+  {n:'Boston',c:'United States',lat:42.3601,lng:-71.0589},{n:'Las Vegas',c:'United States',lat:36.1699,lng:-115.1398},
+  {n:'Atlanta',c:'United States',lat:33.7490,lng:-84.3880},{n:'Miami',c:'United States',lat:25.7617,lng:-80.1918},
+  {n:'Minneapolis',c:'United States',lat:44.9778,lng:-93.2650},{n:'Nashville',c:'United States',lat:36.1627,lng:-86.7816},
+  {n:'Portland',c:'United States',lat:45.5051,lng:-122.6750},{n:'Salt Lake City',c:'United States',lat:40.7608,lng:-111.8910},
+  {n:'New Orleans',c:'United States',lat:29.9511,lng:-90.0715},{n:'Austin',c:'United States',lat:30.2672,lng:-97.7431},
+  {n:'Toronto',c:'Canada',lat:43.6532,lng:-79.3832},{n:'Vancouver',c:'Canada',lat:49.2827,lng:-123.1207},
+  {n:'Montreal',c:'Canada',lat:45.5017,lng:-73.5673},{n:'Calgary',c:'Canada',lat:51.0447,lng:-114.0719},
+  {n:'Ottawa',c:'Canada',lat:45.4215,lng:-75.6972},{n:'Mexico City',c:'Mexico',lat:19.4326,lng:-99.1332},
+  {n:'Sao Paulo',c:'Brazil',lat:-23.5505,lng:-46.6333},{n:'Rio de Janeiro',c:'Brazil',lat:-22.9068,lng:-43.1729},
+  {n:'Buenos Aires',c:'Argentina',lat:-34.6037,lng:-58.3816},{n:'Santiago',c:'Chile',lat:-33.4489,lng:-70.6693},
+  {n:'Lima',c:'Peru',lat:-12.0464,lng:-77.0428},{n:'Bogota',c:'Colombia',lat:4.7110,lng:-74.0721},
+  {n:'Havana',c:'Cuba',lat:23.1136,lng:-82.3666},{n:'Tokyo',c:'Japan',lat:35.6762,lng:139.6503},
+  {n:'Osaka',c:'Japan',lat:34.6937,lng:135.5023},{n:'Kyoto',c:'Japan',lat:35.0116,lng:135.7681},
+  {n:'Seoul',c:'South Korea',lat:37.5665,lng:126.9780},{n:'Beijing',c:'China',lat:39.9042,lng:116.4074},
+  {n:'Shanghai',c:'China',lat:31.2304,lng:121.4737},{n:'Guangzhou',c:'China',lat:23.1291,lng:113.2644},
+  {n:'Shenzhen',c:'China',lat:22.5431,lng:114.0579},{n:'Hong Kong',c:'China',lat:22.3193,lng:114.1694},
+  {n:'Taipei',c:'Taiwan',lat:25.0330,lng:121.5654},{n:'Singapore',c:'Singapore',lat:1.3521,lng:103.8198},
+  {n:'Bangkok',c:'Thailand',lat:13.7563,lng:100.5018},{n:'Kuala Lumpur',c:'Malaysia',lat:3.1390,lng:101.6869},
+  {n:'Jakarta',c:'Indonesia',lat:-6.2088,lng:106.8456},{n:'Manila',c:'Philippines',lat:14.5995,lng:120.9842},
+  {n:'Ho Chi Minh City',c:'Vietnam',lat:10.8231,lng:106.6297},{n:'Hanoi',c:'Vietnam',lat:21.0285,lng:105.8542},
+  {n:'Mumbai',c:'India',lat:19.0760,lng:72.8777},{n:'Delhi',c:'India',lat:28.6139,lng:77.2090},
+  {n:'Bangalore',c:'India',lat:12.9716,lng:77.5946},{n:'Hyderabad',c:'India',lat:17.3850,lng:78.4867},
+  {n:'Chennai',c:'India',lat:13.0827,lng:80.2707},{n:'Kolkata',c:'India',lat:22.5726,lng:88.3639},
+  {n:'Dubai',c:'UAE',lat:25.2048,lng:55.2708},{n:'Abu Dhabi',c:'UAE',lat:24.4539,lng:54.3773},
+  {n:'Riyadh',c:'Saudi Arabia',lat:24.7136,lng:46.6753},{n:'Doha',c:'Qatar',lat:25.2854,lng:51.5310},
+  {n:'Kuwait City',c:'Kuwait',lat:29.3759,lng:47.9774},{n:'Muscat',c:'Oman',lat:23.5880,lng:58.3829},
+  {n:'Beirut',c:'Lebanon',lat:33.8938,lng:35.5018},{n:'Baghdad',c:'Iraq',lat:33.3152,lng:44.3661},
+  {n:'Tehran',c:'Iran',lat:35.6892,lng:51.3890},{n:'Tel Aviv',c:'Israel',lat:32.0853,lng:34.7818},
+  {n:'Jerusalem',c:'Israel',lat:31.7683,lng:35.2137},{n:'Tbilisi',c:'Georgia',lat:41.6938,lng:44.8015},
+  {n:'Baku',c:'Azerbaijan',lat:40.4093,lng:49.8671},{n:'Tashkent',c:'Uzbekistan',lat:41.2995,lng:69.2401},
+  {n:'Almaty',c:'Kazakhstan',lat:43.2220,lng:76.8512},{n:'Sydney',c:'Australia',lat:-33.8688,lng:151.2093},
+  {n:'Melbourne',c:'Australia',lat:-37.8136,lng:144.9631},{n:'Brisbane',c:'Australia',lat:-27.4698,lng:153.0251},
+  {n:'Perth',c:'Australia',lat:-31.9505,lng:115.8605},{n:'Adelaide',c:'Australia',lat:-34.9285,lng:138.6007},
+  {n:'Auckland',c:'New Zealand',lat:-36.8509,lng:174.7645},{n:'Wellington',c:'New Zealand',lat:-41.2865,lng:174.7762},
+  {n:'Cairo',c:'Egypt',lat:30.0444,lng:31.2357},{n:'Casablanca',c:'Morocco',lat:33.5731,lng:-7.5898},
+  {n:'Marrakech',c:'Morocco',lat:31.6295,lng:-7.9811},{n:'Lagos',c:'Nigeria',lat:6.5244,lng:3.3792},
+  {n:'Nairobi',c:'Kenya',lat:-1.2921,lng:36.8219},{n:'Addis Ababa',c:'Ethiopia',lat:9.0320,lng:38.7469},
+  {n:'Johannesburg',c:'South Africa',lat:-26.2041,lng:28.0473},{n:'Cape Town',c:'South Africa',lat:-33.9249,lng:18.4241},
+  {n:'Durban',c:'South Africa',lat:-29.8587,lng:31.0218},{n:'Accra',c:'Ghana',lat:5.6037,lng:-0.1870},
+  {n:'Dakar',c:'Senegal',lat:14.7167,lng:-17.4677},{n:'Kinshasa',c:'DR Congo',lat:-4.4419,lng:15.2663},
+];
+
+function offlineSearch(q) {
+  q = q.toLowerCase().trim();
+  if (!q) return [];
+  return CITIES.filter(function(c){ return c.n.toLowerCase().indexOf(q) !== -1; })
+    .sort(function(a,b){
+      var as = a.n.toLowerCase().indexOf(q)===0, bs = b.n.toLowerCase().indexOf(q)===0;
+      if(as&&!bs) return -1; if(!as&&bs) return 1; return a.n.localeCompare(b.n);
+    }).slice(0,6).map(function(c){ return {name:c.n, country:c.c, detail:c.c, lat:c.lat, lng:c.lng}; });
+}
+
+var photonTimer=null, lastQ='';
+async function liveSearch(q) {
+  try {
+    var res = await fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(q)+'&limit=6&lang=en');
+    if (!res.ok) return null;
+    var data = await res.json();
+    return (data.features||[]).map(function(f){
+      var p=f.properties, name=p.name||p.city||p.town||p.village||q;
+      var parts=[p.city,p.town,p.state,p.country].filter(function(v){return v&&v!==name;});
+      return {name:name, country:p.country||'', detail:parts.slice(0,2).join(', ')||p.country||'', lat:f.geometry.coordinates[1], lng:f.geometry.coordinates[0]};
+    });
+  } catch(e){ return null; }
+}
+
+var acBox = document.getElementById('autocomplete');
+function positionAC() {
+  var r = document.getElementById('location-input').getBoundingClientRect();
+  acBox.style.left = r.left+'px'; acBox.style.top = (r.bottom+5)+'px'; acBox.style.width = r.width+'px';
+}
+function renderAC(results) {
+  if (!results||!results.length) { acBox.style.display='none'; return; }
+  positionAC();
+  acBox.innerHTML = results.map(function(r,i){
+    return '<div class="ac-item" data-i="'+i+'"><div class="ac-name">'+r.name+'</div><div class="ac-detail">'+(r.detail||r.country||'')+'</div></div>';
+  }).join('');
+  acBox.style.display = 'block';
+  acBox.querySelectorAll('.ac-item').forEach(function(el){
+    el.addEventListener('mousedown', function(e){ e.preventDefault(); flyTo(results[parseInt(el.dataset.i)]); });
+  });
+}
+function hideAC() { acBox.style.display='none'; }
+
+function flyTo(city) {
+  var lat=city.lat, lng=city.lng, name=city.name, country=city.country||'';
+  currentLocation={lat:lat,lng:lng,name:name,country:country};
+  map.flyTo({center:[lng,lat],zoom:12,duration:1400,essential:true});
+  document.getElementById('city-display').textContent = name;
+  document.getElementById('coords-display').textContent = Math.abs(lat).toFixed(4)+'° '+(lat>=0?'N':'S')+' / '+Math.abs(lng).toFixed(4)+'° '+(lng>=0?'E':'W');
+  document.getElementById('badge-city').textContent = country?name+', '+country:name;
+  document.getElementById('badge-coords').textContent = Math.abs(lat).toFixed(4)+'° '+(lat>=0?'N':'S')+' \u00b7 '+Math.abs(lng).toFixed(4)+'° '+(lng>=0?'E':'W');
+  document.getElementById('location-input').value = name;
+  hideAC(); showToast('Flying to '+name);
+}
+
+document.getElementById('location-input').addEventListener('input', function(e){
+  var q=e.target.value.trim(); lastQ=q;
+  if(q.length<2){hideAC();return;}
+  renderAC(offlineSearch(q));
+  clearTimeout(photonTimer);
+  photonTimer=setTimeout(async function(){
+    if(q!==lastQ)return;
+    var live=await liveSearch(q);
+    if(q!==lastQ)return;
+    if(live&&live.length) renderAC(live);
+  },380);
+});
+document.getElementById('location-input').addEventListener('blur', function(){ setTimeout(hideAC,180); });
+document.getElementById('location-input').addEventListener('keydown', async function(e){
+  if(e.key==='Escape'){hideAC();return;}
+  if(e.key==='Enter'){
+    var q=e.target.value.trim(); clearTimeout(photonTimer); hideAC();
+    var live=await liveSearch(q); if(live&&live.length){flyTo(live[0]);return;}
+    var off=offlineSearch(q); if(off.length){flyTo(off[0]);return;}
+    showToast('Place not found');
+  }
+});
+document.getElementById('search-btn').addEventListener('click', async function(){
+  var q=document.getElementById('location-input').value.trim(); if(!q)return;
+  clearTimeout(photonTimer); hideAC();
+  var live=await liveSearch(q); if(live&&live.length){flyTo(live[0]);return;}
+  var off=offlineSearch(q); if(off.length){flyTo(off[0]);return;}
+  showToast('Place not found');
+});
+window.addEventListener('resize',function(){ if(acBox.style.display!=='none') positionAC(); });
+
+var toastEl=document.getElementById('toast'), toastTimer=null;
+function showToast(msg){
+  toastEl.textContent=msg; toastEl.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){toastEl.classList.remove('show');},2200);
+}
+
+function boot(){ buildSwatches(); initMap(); }
+</script>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" onload="boot()"></script>
+</body>
+</html>
